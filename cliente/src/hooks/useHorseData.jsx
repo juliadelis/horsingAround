@@ -11,7 +11,7 @@ export const useHorseData = () => {
   const fetchAllCavalos = async () => {
     try {
       const res = await axios.get(
-        "https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/"
+        "https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/cavalos"
       );
       setCavalos(res.data);
       let numeroF = 0;
