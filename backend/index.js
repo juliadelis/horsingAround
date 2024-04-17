@@ -51,7 +51,7 @@ app.put("/cavalos/:id", upload.single("foto"), async (req, res) => {
 
     if (req.file) {
       const updateHorse =
-        await db`UPDATE cavalos SET nome=?, idade=?, racao=?, sexo=?, raca=?, feno=?, medicacao=?, aulas=?, nome_pai=?, nome_mae=?, peso=?, foto=? WHERE id = ?`;
+        await db`UPDATE cavalos SET nome=${req.body.nome}, idade=${req.body.idade}, racao=${req.body.racao}, sexo=${req.body.sexo}, raca=${req.body.raca}, feno=${req.body.feno}, medicacao=${req.body.medicacao}, aulas=${req.body.aulas}, nome_pai=${req.body.nome_pai}, nome_mae=${req.body.nome_mae}, peso=${req.body.peso}, foto=${req.file.filename} WHERE id=${id}`;
 
       const values = [
         req.body.nome,
@@ -69,10 +69,10 @@ app.put("/cavalos/:id", upload.single("foto"), async (req, res) => {
         id,
       ];
 
-      return res.status(200).json("Cavalos has been edit.");
+      return res.status(200).json("Cavalos has been edited.");
     } else {
       const updateHorse =
-        await db`UPDATE cavalos SET nome=?, idade=?, racao=?, sexo=?, raca=?, feno=?, medicacao=?, aulas=?, nome_pai=?, nome_mae=?, peso=? WHERE id = ?`;
+        await db`UPDATE cavalos SET nome=${req.body.nome}, idade=${req.body.idade}, racao=${req.body.racao}, sexo=${req.body.sexo}, raca=${req.body.raca}, feno=${req.body.feno}, medicacao=${req.body.medicacao}, aulas=${req.body.aulas}, nome_pai=${req.body.nome_pai}, nome_mae=${req.body.nome_mae}, peso=${req.body.peso} WHERE id=${id}`;
 
       const values = [
         req.body.nome,
@@ -89,11 +89,11 @@ app.put("/cavalos/:id", upload.single("foto"), async (req, res) => {
         id,
       ];
 
-      return res.status(200).json("Cavalos has been edit.");
+      return res.status(200).json("Cavalos has been edited.");
     }
   } catch (error) {
     console.log(error);
-    return res.status(500);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
