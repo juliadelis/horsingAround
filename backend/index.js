@@ -1,9 +1,9 @@
-import express from "express";
-import cors from "cors";
-import { db } from "./db.js";
-import multer from "multer";
-import { storage } from "./cloudinaryConfig.js";
-import dotenv from "dotenv";
+const express = require("express");
+const cors = require("cors");
+const { db } = require("./db.js");
+const multer = require("multer");
+const { storage } = require("./cloudinaryConfig.js");
+const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
@@ -132,3 +132,5 @@ app.delete("/cavalos/:id", async (req, res) => {
 app.listen(8800, () => {
   console.log("connected to backend!!");
 });
+
+module.exports = app;

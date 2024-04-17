@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
-import cloudinary from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import dotenv from "dotenv";
+const { v4: uuidv4 } = require("uuid");
+const cloudinary = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const dotenv = require("dotenv");
 dotenv.config();
 
 cloudinary.v2.config({
@@ -10,9 +10,11 @@ cloudinary.v2.config({
   api_secret: process.env.API_SECRET,
 });
 
-export const storage = new CloudinaryStorage({
+const storage = new CloudinaryStorage({
   cloudinary: cloudinary.v2,
   params: {
     folder: "images",
   },
 });
+
+module.exports = { storage };
