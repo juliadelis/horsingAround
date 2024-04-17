@@ -1,9 +1,6 @@
-import mysql from "mysql"
+import postgres from "postgres";
+import dotenv from "dotenv";
+dotenv.config();
 
-export const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"root123",
-    database:"horses"
-
-});
+const connectionString = process.env.DB_URL;
+export const db = postgres(connectionString);
