@@ -132,3 +132,4 @@ app.delete("/cavalos/:id", async (req, res) => {
 app.listen(8800, () => {
   console.log("connected to backend!!");
 });
+module.exports = app;
