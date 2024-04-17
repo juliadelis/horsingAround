@@ -13,6 +13,8 @@ const upload = multer({ storage: storage });
 app.use((req, res, next) => {
   //Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
   res.header("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   //Quais são os métodos que a conexão pode realizar na API
   app.use(cors());
   next();

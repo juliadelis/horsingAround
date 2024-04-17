@@ -29,7 +29,7 @@ const VerCavalo = () => {
     const getCavalo = async () => {
       try {
         const { data } = await axios.get(
-          `https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/cavalos/${params.id}`
+          `https://horsing-api.vercel.app/cavalos/${params.id}`
         );
         const cavalo = data[0];
         setcavalo(cavalo);
@@ -41,9 +41,7 @@ const VerCavalo = () => {
   }, []);
   const destroyHorse = async (id) => {
     try {
-      await axios.delete(
-        `https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/cavalos/${id}`
-      );
+      await axios.delete(`https://horsing-api.vercel.app/cavalos/${id}`);
       console.log("deletou");
       navigate("/cavalos");
     } catch (error) {

@@ -69,7 +69,7 @@ const Form = ({ initialData }) => {
       if (initialData) {
         await axios({
           method: "put",
-          url: `https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/cavalos/${cavalo.id}`,
+          url: `https://horsing-api.vercel.app/cavalos/${cavalo.id}`,
           data: formData,
 
           headers: { "Content-Type": "multipart/form-data" },
@@ -78,7 +78,7 @@ const Form = ({ initialData }) => {
       } else {
         await axios({
           method: "post",
-          url: `https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/cavalos`,
+          url: `https://horsing-api.vercel.app/cavalos`,
           data: formData,
           headers: { "Content-Type": "multipart/form-data" },
         });

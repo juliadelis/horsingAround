@@ -10,7 +10,7 @@ const Update = () => {
     const getCavalo = async () => {
       try {
         const { data } = await axios.get(
-          `https://horsing-jt2o20xg0-julia-delis-projects.vercel.app/cavalos/${params.id}`
+          `https://horsing-api.vercel.app/cavalos/${params.id}`
         );
         const cavalo = data[0];
         setcavalo(cavalo);
