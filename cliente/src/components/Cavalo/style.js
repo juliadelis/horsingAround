@@ -39,6 +39,10 @@ export const CardText = styled.div`
     content: "";
     flex: auto;
   }
+
+  @media only screen and (max-width: 500px) {
+    flex-direction: column;
+  }
 `;
 
 export const ItemNome = styled.div`
@@ -68,6 +72,11 @@ export const ItemCorrespondente = styled.div`
   flex-direction: column;
   width: 25%;
   margin-bottom: 15px;
+  @media only screen and (max-width: 600px) {
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+  }
 `;
 
 export const ItemBanco = styled.div`
