@@ -11,6 +11,10 @@ export const Container = styled.div`
   width: 100%;
   margin: 30px;
   justify-content: space-between;
+
+  @media only screen and (max-width: 768px) {
+    width: 83%;
+  }
 `;
 
 export const Card = styled.div`
@@ -22,6 +26,9 @@ export const Card = styled.div`
   flex-wrap: wrap;
 
   align-items: flex-start;
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const CardText = styled.div`

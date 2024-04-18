@@ -22,6 +22,9 @@ export const Card = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const CardText = styled.div`
@@ -108,6 +111,13 @@ export const Botao = styled(Link)`
     background-color: #f1b356;
     transition: 0.5s;
   }
+
+  @media only screen and (max-width: 768px) {
+    right: 20%;
+  }
+  @media only screen and (max-width: 500px) {
+    right: 25%;
+  }
 `;
 
 export const Svg = styled(Icon)`
@@ -149,6 +159,10 @@ export const Deletar = styled.button`
   &:hover {
     background-color: #f1b356;
     transition: 0.5s;
+  }
+
+  @media only screen and (max-width: 768px) {
+    right: 7%;
   }
 `;
 

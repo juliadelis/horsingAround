@@ -32,6 +32,9 @@ export const Input = styled.input`
   border-left: none;
   background: transparent;
   height: 40px;
+  @media only screen and (max-width: 500px) {
+    width: 250px;
+  }
 `;
 
 export const Label = styled.label``;
@@ -47,12 +50,22 @@ export const Button = styled.button`
   width: 180px;
   font-weight: 600;
   letter-spacing: 0.12em;
-  margin-left: 30px;
+  margin-left: 1vw;
+  @media only screen and (max-width: 800px) {
+    margin-left: 17vw;
+  }
+  @media only screen and (max-width: 500px) {
+    width: 250px;
+    margin-left: 17vw;
+  }
 `;
 
 export const InputFoto = styled.input`
   height: 40px;
   width: 170px;
+  @media only screen and (max-width: 500px) {
+    width: 270px;
+  }
 `;
 
 export const Option = styled.select`
@@ -72,5 +85,9 @@ export const Option = styled.select`
     font-weight: small;
     display: flex;
     white-space: pre;
+  }
+
+  @media only screen and (max-width: 500px) {
+    width: 270px;
   }
 `;

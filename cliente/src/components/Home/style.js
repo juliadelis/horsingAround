@@ -9,6 +9,9 @@ export const Container = styled.div`
   width: 100%;
   margin: 30px;
   justify-content: space-between;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 export const Card = styled.div`
@@ -92,6 +95,13 @@ export const Img = styled.img`
 export const Container_E = styled.div`
   width: 42%;
   padding: 55px;
+  @media only screen and (max-width: 500px) {
+    width: 100%;
+    padding: 40px;
+  }
+  @media only screen and (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 export const DivImg = styled.div`
@@ -100,6 +110,12 @@ export const DivImg = styled.div`
   border-radius: 25px;
   align-items: center;
   display: flex;
+  @media only screen and (max-width: 500px) {
+    display: none;
+  }
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const Container_D = styled.img`
@@ -108,6 +124,12 @@ export const Container_D = styled.img`
   float: right;
   transform: scaleX(-1);
   border-radius: 25px 0px 0px 25px;
+  @media only screen and (max-width: 768px) {
+    height: 300px;
+    object-fit: cover;
+    object-position: 60% 60%;
+    border-radius: 25px 25px 0px 0px;
+  }
 `;
 
 export const Hipica = styled.h2`
