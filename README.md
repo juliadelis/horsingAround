@@ -1,5 +1,8 @@
 
 
+![image 1](https://github.com/juliadelis/horsingAround/assets/57239717/0033928a-57c8-41af-817f-8baafaa7f958)
+
+
 
 
 The project consists of horse management for horse racing, a complete platform. Designed to facilitate the administration and monitoring of horses at a horse riding facility, this application offers a robust and intuitive solution for the institution's managers and employees.
