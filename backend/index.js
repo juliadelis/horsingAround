@@ -27,6 +27,10 @@ const upload = multer({
 app.use(cors());
 app.use(express.json());
 
+app.get("/test", (req, res) => {
+  res.json({ ok: true });
+});
+
 app.get("/cavalos", async (req, res) => {
   try {
     const horses = await db`SELECT * FROM horses`;
