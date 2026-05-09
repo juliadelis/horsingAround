@@ -31,6 +31,27 @@ app.get("/test", (req, res) => {
   res.json({ ok: true });
 });
 
+app.get("/db-test", async (req, res) => {
+  try {
+    console.time("db-test");
+
+    const result = await db`SELECT NOW()`;
+
+    console.timeEnd("db-test");
+
+    return res.status(200).json({
+      ok: true,
+      result,
+    });
+  } catch (error) {
+    console.error("DB ERROR:", error);
+    return res.status(500).json({
+      ok: false,
+      error: error.message,
+    });
+  }
+});
+
 app.get("/cavalos", async (req, res) => {
   try {
     const horses = await db`SELECT * FROM horses`;
