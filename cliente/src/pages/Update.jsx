@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Form from "../components/Form";
+import api from "../services/api";
 
 const Update = () => {
   const [cavalo, setcavalo] = useState(null);
@@ -9,9 +10,7 @@ const Update = () => {
   useEffect(() => {
     const getCavalo = async () => {
       try {
-        const { data } = await axios.get(
-          `https://horsing-api.vercel.app/cavalos/${params.id}`
-        );
+        const { data } = await api.get(`/cavalos/${params.id}`);
         const cavalo = data[0];
         setcavalo(cavalo);
       } catch (error) {

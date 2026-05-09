@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 export const useHorseData = () => {
   const [cavalos, setCavalos] = useState([]);
@@ -10,26 +10,30 @@ export const useHorseData = () => {
 
   const fetchAllCavalos = async () => {
     try {
-      const res = await axios.get("https://horsing-api.vercel.app/cavalos");
+      const res = await api.get("/cavalos");
       setCavalos(res.data);
       let numeroF = 0;
       let numeroM = 0;
       let cavalosMedicadosTemp = [];
       let maiorNumero = 0;
       let cavaloMaisUsadoTemp;
-      res.data.map((cavalo) => {
-        console.log(cavalo.medicacao);
-        if (cavalo.medicacao.trim() !== "Não") {
+      res.data.forEach((cavalo) => {
+        const medRaw = cavalo.medication;
+
+        const isMedicated = medRaw === true;
+        if (isMedicated) {
           cavalosMedicadosTemp.push(cavalo);
         }
-        if (cavalo.sexo === "Fêmea") {
+
+        if (cavalo.gender === "Femea") {
           numeroF += 1;
         }
-        if (cavalo.sexo === "Macho") {
+        if (cavalo.gender === "Macho") {
           numeroM += 1;
         }
-        if (cavalo.aulas > maiorNumero) {
-          maiorNumero = cavalo.aulas;
+        const aulasNum = Number(cavalo.lessons) || 0;
+        if (aulasNum > maiorNumero) {
+          maiorNumero = aulasNum;
           cavaloMaisUsadoTemp = cavalo;
         }
       });

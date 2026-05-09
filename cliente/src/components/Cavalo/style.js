@@ -11,6 +11,11 @@ export const Container = styled.div`
   height: 80vh;
   margin: 30px;
   justify-content: space-between;
+  @media only screen and (max-width: 768px) {
+    height: calc(100vh - 60px);
+    padding: 0px;
+    margin: 0;
+  }
 `;
 
 export const Card = styled.div`
@@ -24,6 +29,7 @@ export const Card = styled.div`
   align-items: flex-start;
   @media only screen and (max-width: 768px) {
     width: 100%;
+    border-radius: 0;
   }
 `;
 
@@ -65,6 +71,9 @@ export const Item = styled.div`
 `;
 export const Botoes = styled.div`
   width: 100%;
+  @media only screen and (max-width: 768px) {
+    display: flex;
+  }
 `;
 
 export const ItemCorrespondente = styled.div`
@@ -97,6 +106,9 @@ export const Img = styled.img`
   height: 449.54px;
 
   object-fit: cover;
+  @media only screen and (max-width: 768px) {
+    border-radius: 0;
+  }
 `;
 
 export const Botao = styled(Link)`

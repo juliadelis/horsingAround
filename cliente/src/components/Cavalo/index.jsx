@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Link, redirect, useNavigate, useParams } from "react-router-dom";
+import api from "../../services/api";
 
 const VerCavalo = () => {
   const [cavalo, setcavalo] = useState(null);
@@ -29,9 +30,7 @@ const VerCavalo = () => {
   useEffect(() => {
     const getCavalo = async () => {
       try {
-        const { data } = await axios.get(
-          `https://horsing-api.vercel.app/cavalos/${params.id}`
-        );
+        const { data } = await api.get(`/cavalos/${params.id}`);
         const cavalo = data[0];
         setcavalo(cavalo);
       } catch (error) {
@@ -42,13 +41,14 @@ const VerCavalo = () => {
   }, []);
   const destroyHorse = async (id) => {
     try {
-      await axios.delete(`https://horsing-api.vercel.app/cavalos/${id}`);
-      console.log("deletou");
+      await api.delete(`/cavalos/${id}`);
+
       navigate("/cavalos");
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(cavalo);
   if (cavalo) {
     return (
       <Container>
@@ -79,54 +79,59 @@ const VerCavalo = () => {
               </Svg>
             </Voltar>
 
-            {cavalo.foto && (
-              <Img
-                src={`https://res.cloudinary.com/dgjpw8ei8/image/upload/v1682287004/${cavalo.foto}`}
-                alt="imagem"
-              />
-            )}
+            {cavalo.pictureurl && <Img src={cavalo.pictureurl} alt="imagem" />}
           </Botoes>
           <CardText>
-            <ItemNome>{cavalo.nome}</ItemNome>
+            <ItemNome>{cavalo.name}</ItemNome>
+            <ItemCorrespondente>
+              <Item>Proprietário:</Item>
+              <ItemBanco>{cavalo.owner}</ItemBanco>
+            </ItemCorrespondente>
+
             <ItemCorrespondente>
               <Item>Idade:</Item>
-              <ItemBanco>{cavalo.idade}</ItemBanco>
+              <ItemBanco>{cavalo.age}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Ração:</Item>
-              <ItemBanco>{cavalo.racao}</ItemBanco>
+              <ItemBanco>{cavalo.foodamount}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Sexo:</Item>
-              <ItemBanco>{cavalo.sexo}</ItemBanco>
+              <ItemBanco>{cavalo.gender}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Raça:</Item>
-              <ItemBanco>{cavalo.raca}</ItemBanco>
+              <ItemBanco>{cavalo.breed}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Feno:</Item>
-              <ItemBanco>{cavalo.feno}</ItemBanco>
+              <ItemBanco>{cavalo.hay ? "Sim" : "Não"}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Medicação:</Item>
-              <ItemBanco>{cavalo.medicacao}</ItemBanco>
+              <ItemBanco>
+                {(cavalo.medication === true || cavalo.medication === "true") &&
+                cavalo.medicationtype
+                  ? cavalo.medicationtype
+                  : "Não"}
+              </ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Aulas:</Item>
-              <ItemBanco>{cavalo.aulas}</ItemBanco>
+              <ItemBanco>{cavalo.lessons}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Nome do pai:</Item>
-              <ItemBanco>{cavalo.nome_pai}</ItemBanco>
+              <ItemBanco>{cavalo.fathersname}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Nome da Mãe:</Item>
-              <ItemBanco>{cavalo.nome_mae}</ItemBanco>
+              <ItemBanco>{cavalo.mothersname}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Peso:</Item>
-              <ItemBanco>{cavalo.peso}</ItemBanco>
+              <ItemBanco>{cavalo.weight}</ItemBanco>
             </ItemCorrespondente>
           </CardText>
         </Card>

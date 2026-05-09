@@ -7,81 +7,129 @@ import {
   Label,
   InputFoto,
   Option,
+  FileInputWrapper,
+  FileInputLabel,
+  FileName,
+  ImagePreview,
+  PreviewImage,
+  DeleteButton,
+  ButtonContainer,
 } from "./style.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../services/api";
+import { BiTrash } from "react-icons/bi";
 
 const Form = ({ initialData }) => {
   const ref = useRef();
   const navigate = useNavigate();
-  const [temMedicacao, settemMedicacao] = useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [cavalo, setCavalo] = useState(
     initialData
       ? initialData
       : {
-          nome: "",
-          idade: "",
-          racao: "",
-          sexo: "",
-          raca: "",
-          feno: "",
-          medicacao: "Não",
-          aulas: "",
-          nome_pai: "",
-          nome_mae: "",
-          peso: "",
-        }
+          name: "",
+          owner: "",
+          age: "",
+          foodamount: "",
+          gender: "",
+          breed: "",
+          hay: false,
+          medication: false,
+          medicationtype: "",
+          lessons: "",
+          fathersname: "",
+          mothersname: "",
+          weight: "",
+          pictureurl: "",
+        },
   );
 
   const handleFileSelect = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    setSelectedFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCavalo((prev) => ({ ...prev, pictureurl: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDeleteSelection = () => {
+    setSelectedFile(null);
+    setCavalo((prev) => ({ ...prev, pictureurl: "" }));
+
+    const fileInput = document.getElementById("file-input");
+    if (fileInput) {
+      fileInput.value = "";
+    }
   };
 
   const handleChange = (e) => {
     setCavalo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const appendFields = (values, formData) => {
-    for (var key in values) {
-      formData.append(key, values[key]);
+  const handleMedicationChange = (e) => {
+    const value = e.target.value;
+    if (value === "false") {
+      // When medication is false, reset medicationType to null
+      setCavalo((prev) => ({
+        ...prev,
+        medication: value,
+        medicationtype: null,
+      }));
+    } else {
+      setCavalo((prev) => ({ ...prev, medication: value }));
     }
   };
 
-  const changeTemMedicacao = (e) => {
-    if (e.target.value === "Sim") {
-      settemMedicacao(true);
-      return;
+  const appendFields = (values, formData) => {
+    for (var key in values) {
+      // Don't send the preview image data URI to backend
+      if (key !== "pictureurl") {
+        // If medication is false, set medicationtype to null
+        if (key === "medicationtype" && values.medication === "false") {
+          formData.append(key, null);
+        } else {
+          formData.append(key, values[key]);
+        }
+      }
     }
-    setCavalo((prev) => ({ ...prev, medicacao: "Não" }));
-    settemMedicacao(false);
   };
 
   const handleClick = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("foto", selectedFile);
+      if (selectedFile) {
+        formData.append("foto", selectedFile);
+      }
       appendFields(cavalo, formData);
 
-      console.log(cavalo);
       if (initialData) {
-        await axios({
+        const response = await api({
           method: "put",
-          url: `https://horsing-api.vercel.app/cavalos/${cavalo.id}`,
+          url: `/cavalos/${cavalo.id}`,
           data: formData,
-
           headers: { "Content-Type": "multipart/form-data" },
         });
+        if (response.data.fotoUrl) {
+          setCavalo((prev) => ({ ...prev, pictureurl: response.data.fotoUrl }));
+        }
         navigate("/cavalos");
       } else {
-        await axios({
+        const response = await api({
           method: "post",
-          url: `https://horsing-api.vercel.app/cavalos`,
+          url: `/cavalos`,
           data: formData,
           headers: { "Content-Type": "multipart/form-data" },
         });
+        if (response.data.fotoUrl) {
+          setCavalo((prev) => ({ ...prev, pictureurl: response.data.fotoUrl }));
+        }
         navigate("/cavalos");
       }
     } catch (err) {
@@ -89,153 +137,188 @@ const Form = ({ initialData }) => {
     }
   };
 
+  const isMedicationTrue =
+    cavalo?.medication === "true" || cavalo?.medication === true;
+
   return (
     <FormContainer ref={ref}>
       <InputArea>
         <Label>Nome</Label>
         <Input
-          value={cavalo.nome}
+          value={cavalo.name}
           type="text"
           onChange={handleChange}
-          name="nome"
+          name="name"
+        />
+      </InputArea>
+      <InputArea>
+        <Label>Proprietário</Label>
+        <Input
+          value={cavalo.owner}
+          type="text"
+          onChange={handleChange}
+          name="owner"
         />
       </InputArea>
       <InputArea>
         <Label>Idade</Label>
         <Input
-          value={cavalo.idade}
+          value={cavalo.age}
           type="text"
           onChange={handleChange}
-          name="idade"
+          name="age"
         />
       </InputArea>
       <InputArea>
         <Label>Ração</Label>
         <Input
-          value={cavalo.racao}
+          value={cavalo.foodamount}
           type="text"
           onChange={handleChange}
-          name="racao"
+          name="foodamount"
         />
       </InputArea>
       <InputArea>
         <Label>Sexo</Label>
         <Option
-          value={cavalo.sexo}
+          value={cavalo.gender}
           type="text"
           onChange={handleChange}
-          name="sexo">
+          name="gender">
           <option value="-" hidden>
             -
           </option>
-          <option value="Fêmea">Fêmea</option>
+          <option value="Femea">Fêmea</option>
           <option value="Macho">Macho</option>
         </Option>
       </InputArea>
       <InputArea>
         <Label>Raça</Label>
         <Input
-          value={cavalo.raca}
+          value={cavalo.breed}
           type="text"
           onChange={handleChange}
-          name="raca"
+          name="breed"
         />
       </InputArea>
       <InputArea>
         <Label>Feno</Label>
         <Option
-          value={cavalo.feno}
+          value={cavalo.hay}
           type="text"
           onChange={handleChange}
-          name="feno">
+          name="hay">
           <option value="-" hidden>
             -
           </option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
+          <option value={true}>Sim</option>
+          <option value={false}>Não</option>
         </Option>
       </InputArea>
       <InputArea>
         <Label>Medicação</Label>
-        <Option type="text" onChange={changeTemMedicacao} name="temMedicacao">
+        <Option
+          type="text"
+          value={cavalo.medication}
+          onChange={handleMedicationChange}
+          name="medication">
           <option value="-" hidden>
             -
           </option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
+          <option value={true}>Sim</option>
+          <option value={false}>Não</option>
         </Option>
       </InputArea>
-      {temMedicacao && (
+
+      {isMedicationTrue && (
         <InputArea>
-          <Label>Qual medicação seria?</Label>
+          <Label>Tratamento:</Label>
           <Input
-            value={cavalo.medicacao === "Não" ? "" : cavalo.medicacao}
+            value={cavalo?.medicationtype}
             type="text"
             onChange={handleChange}
-            name="medicacao"
+            name="medicationtype"
           />
         </InputArea>
       )}
       <InputArea>
         <Label>Aulas</Label>
         <Option
-          value={cavalo.aulas}
+          value={cavalo.lessons}
           type="text"
           onChange={handleChange}
-          name="aulas">
+          name="lessons">
           <option value="-" hidden>
             -
           </option>
-          <option value="1">1x /sem</option>
-          <option value="2">2x /sem</option>
-          <option value="3">3x /sem</option>
-          <option value="4">4x /sem</option>
-          <option value="5">5x /sem</option>
-          <option value="6">6x /sem</option>
-          <option value="7">7x /sem</option>
-          <option value="8">8x /sem</option>
+          <option value={1}>1x /sem</option>
+          <option value={2}>2x /sem</option>
+          <option value={3}>3x /sem</option>
+          <option value={4}>4x /sem</option>
+          <option value={5}>5x /sem</option>
+          <option value={6}>6x /sem</option>
+          <option value={7}>7x /sem</option>
+          <option value={8}>8x /sem</option>
         </Option>
       </InputArea>
       <InputArea>
         <Label>Nome do pai</Label>
         <Input
-          value={cavalo.nome_pai}
+          value={cavalo.fathersname}
           type="text"
           onChange={handleChange}
-          name="nome_pai"
+          name="fathersname"
         />
       </InputArea>
       <InputArea>
         <Label>Nome da Mãe</Label>
         <Input
-          value={cavalo.nome_mae}
+          value={cavalo.mothersname}
           type="text"
           onChange={handleChange}
-          name="nome_mae"
+          name="mothersname"
         />
       </InputArea>
       <InputArea>
         <Label>Peso</Label>
         <Input
-          value={cavalo.peso}
+          value={cavalo.weight}
           type="text"
           onChange={handleChange}
-          name="peso"
+          name="weight"
         />
       </InputArea>
       <InputArea>
         <Label>Foto</Label>
-        <InputFoto
-          type="file"
-          accept=".png, .jpg, .jpeg"
-          onChange={handleFileSelect}
-          name="foto"
-        />
+        <FileInputWrapper>
+          <FileInputLabel htmlFor="file-input">Escolher arquivo</FileInputLabel>
+          <InputFoto
+            id="file-input"
+            type="file"
+            accept=".png, .jpg, .jpeg, .webp"
+            onChange={handleFileSelect}
+            name="foto"
+          />
+          {selectedFile && (
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <FileName>{selectedFile.name}</FileName>
+              <DeleteButton onClick={handleDeleteSelection}>
+                <BiTrash size={20} />
+              </DeleteButton>
+            </div>
+          )}
+          {cavalo.pictureurl && (
+            <ImagePreview>
+              <PreviewImage src={cavalo.pictureurl} alt="Preview da foto" />
+            </ImagePreview>
+          )}
+        </FileInputWrapper>
       </InputArea>
-
-      <Button type="submit" onClick={handleClick}>
-        SALVAR
-      </Button>
+      <ButtonContainer>
+        <Button type="submit" onClick={handleClick}>
+          SALVAR
+        </Button>
+      </ButtonContainer>
     </FormContainer>
   );
 };

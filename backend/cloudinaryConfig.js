@@ -13,7 +13,7 @@ cloudinary.v2.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary.v2,
   params: {
-    folder: "images",
+    folder: "horsingAround",
   },
 });
 

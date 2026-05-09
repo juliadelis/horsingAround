@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import api from "../../services/api";
 import {
   Card,
   Container,
@@ -9,20 +9,17 @@ import {
   Img,
   CardText,
   ItemCorrespondente,
+  ItemMedicacao,
   Botao,
 } from "./style.js";
 import { useState } from "react";
 import { useEffect } from "react";
-import { FaTrash, FaEdit } from "react-icons/fa";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-
 const Grid = () => {
   const [cavalos, setCavalos] = useState([]);
   const fetchAllCavalos = async () => {
     try {
-      const res = await axios.get("https://horsing-api.vercel.app/cavalos");
-      console.log(res.data);
+      const res = await api.get("/cavalos");
+
       setCavalos(res.data);
     } catch (err) {
       console.log(err);
@@ -37,34 +34,35 @@ const Grid = () => {
     <Container>
       {cavalos.map((cavalos) => (
         <Card className="cavalo" key={cavalos.id}>
-          {cavalos.foto && (
-            <Img
-              src={`https://res.cloudinary.com/dgjpw8ei8/image/upload/v1682287004/${cavalos.foto}`}
-              alt="imagem"
-            />
-          )}
+          {cavalos.pictureurl && <Img src={cavalos.pictureurl} alt="imagem" />}
           <CardText>
-            <ItemNome>{cavalos.nome}</ItemNome>
+            <ItemNome>{cavalos.name}</ItemNome>
             <ItemCorrespondente>
               <Item>Idade:</Item>
-              <ItemBanco>{cavalos.idade}</ItemBanco>
+              <ItemBanco>{cavalos.age} anos</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Ração:</Item>
-              <ItemBanco>{cavalos.racao}</ItemBanco>
+              <ItemBanco>{cavalos.foodamount} kg</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Aulas:</Item>
-              <ItemBanco>{cavalos.aulas}</ItemBanco>
+              <ItemBanco>{cavalos.lessons}</ItemBanco>
             </ItemCorrespondente>
             <ItemCorrespondente>
               <Item>Feno:</Item>
-              <ItemBanco>{cavalos.feno}</ItemBanco>
+              <ItemBanco>
+                {cavalos.hay === "true" || cavalos.hay === true ? "Sim" : "Não"}
+              </ItemBanco>
             </ItemCorrespondente>
-            <ItemCorrespondente>
+            <ItemMedicacao>
               <Item>Medicação:</Item>
-              <ItemBanco>{cavalos.medicacao}</ItemBanco>
-            </ItemCorrespondente>
+              <ItemBanco>
+                {cavalos.medication === "true" || cavalos.medication === true
+                  ? cavalos.medicationtype
+                  : "Não"}
+              </ItemBanco>
+            </ItemMedicacao>
           </CardText>
           <Botao to={`/cavalos/${cavalos.id}`}>Ver detalhes</Botao>
         </Card>

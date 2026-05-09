@@ -2,71 +2,82 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Icon from "../Icon";
 
+export const ContainerMaior = styled.div`
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 0;
+  }
+`;
+
 export const Menu = styled.nav`
-  padding-left: 5%;
-
-  align-content: center;
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  float: left;
-  position: fixed;
-
-  top: 27%;
-  left: 0;
-  width: 20%;
+  justify-content: center;
+  height: 100vh;
+  width: 18vw;
+  min-width: 220px;
+  max-width: 280px;
+  padding-left: 2%;
+  background-color: #22211c;
 
   @media only screen and (max-width: 768px) {
-    flex-direction: row;
     top: 0;
-    padding: 3%;
-    width: 100vw;
-    z-index: 20;
-    background-color: #22211c;
+    left: 0;
+    flex-direction: row;
+    height: 60px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-top: 12px;
+    padding-left: 0;
+    padding-bottom: 0;
+    padding-right: 0;
     align-items: center;
     justify-content: center;
-    gap: 3%;
-    padding-bottom: 0;
   }
 `;
 
 export const Container = styled.div`
-  padding-right: 5%;
-  margin-top: 20px;
+  margin-left: clamp(220px, 18vw, 280px);
+  min-height: 100vh;
+  width: calc(100% - clamp(220px, 18vw, 280px));
+  padding: 2rem 5% 2rem 2rem;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  width: 72%;
-  float: right;
-  position: relative;
-  top: 0;
   overflow-x: hidden !important;
+  box-sizing: border-box;
+
   @media only screen and (max-width: 768px) {
     flex-direction: column;
-    width: 100vw;
-    padding-right: 0;
-    top: 50px;
+    margin-left: 0;
+    margin-top: 60px;
+    width: 100%;
+    min-height: calc(100vh - 60px);
+    padding: 0;
+    justify-content: flex-start;
   }
 `;
-export const Svg = styled(Icon)`
-  width: 37px;
-  height: 37px;
-  margin-right: 31px;
-  //padding: 5px;
-  fill: #afafa7;
-  stroke: #afafa7;
+
+export const Iconsvg = styled.div`
   border-radius: 7px;
   stroke-width: 0.5;
   transition: 0.5s;
+  display: flex;
   &:hover {
-    stroke-width: 0.5;
     background-color: #ffd08a;
     padding: 5px;
-    fill: #22211c;
-    stroke: #22211c;
-    transition: 0.5s;
+    color: #22211c;
+    transition: 0.3s;
   }
 
   @media only screen and (max-width: 768px) {
@@ -76,28 +87,6 @@ export const Svg = styled(Icon)`
   }
   @media only screen and (max-width: 500px) {
     display: none;
-  }
-`;
-
-export const SvgTrash = styled(Icon)`
-  width: 37px;
-  height: 37px;
-  margin-right: 31px;
-  padding: 5px;
-  fill: #afafa7;
-  stroke: #afafa7;
-  border-radius: 7px;
-  stroke-width: 0.5;
-  transition: 0.5s;
-  &:hover {
-    stroke-width: 0.5;
-    background-color: #ffd08a;
-    padding: 5px;
-    fill: #22211c;
-    stroke: #22211c;
-    transition: 0.5s;
-    width: 46px;
-    height: 46px;
   }
 `;
 
@@ -113,6 +102,8 @@ export const Title = styled(NavLink)`
   padding-bottom: 30px;
   text-decoration: none;
   transition: 0.3s;
+  display: flex;
+  gap: 20px;
   &:hover,
   &:active,
   &:visited,
@@ -127,31 +118,22 @@ export const Title = styled(NavLink)`
     transition: 0.3s;
     cursor: pointer;
   }
-  &:hover ${Svg} {
+  &:hover ${Iconsvg} {
     background-color: #ffd08a;
     padding: 5px;
-    fill: #22211c;
-    stroke: #22211c;
-    width: 46px;
-    height: 46px;
+    color: #22211c;
     transition: 0.3s;
   }
-  &:focus ${Svg} {
+  &:focus ${Iconsvg} {
     background-color: #ffd08a;
     padding: 5px;
-    fill: #22211c;
-    stroke: #22211c;
-    width: 46px;
-    height: 46px;
+    color: #22211c;
     transition: 0.3s;
   }
-  &.active ${Svg} {
+  &.active ${Iconsvg} {
     background-color: #ffd08a;
-    width: 46px;
-    height: 46px;
     padding: 5px;
-    fill: #22211c;
-    stroke: #22211c;
+    color: #22211c;
     transition: 0.3s;
   }
 
@@ -166,7 +148,7 @@ export const Title = styled(NavLink)`
     &.active {
       font-weight: 400;
       color: white !important;
-      font-size: 20px;
+      font-size: 20px !important;
       line-height: 36px;
       letter-spacing: 0.04em;
       font-style: normal;
@@ -175,7 +157,7 @@ export const Title = styled(NavLink)`
 
       border-bottom: 4px solid #ffd08a;
     }
-    &:hover ${Svg} {
+    &:hover ${Iconsvg} {
       background-color: transparent;
       padding: 5px;
       fill: white;
@@ -184,7 +166,7 @@ export const Title = styled(NavLink)`
       height: 25px;
       transition: 0.3s;
     }
-    &:focus ${Svg} {
+    &:focus ${Iconsvg} {
       background-color: transparent;
       padding: 5px;
       fill: white;
@@ -193,7 +175,7 @@ export const Title = styled(NavLink)`
       height: 25px;
       transition: 0.3s;
     }
-    &.active ${Svg} {
+    &.active ${Iconsvg} {
       background-color: transparent;
       padding: 5px;
       fill: white;
@@ -208,7 +190,7 @@ export const Title = styled(NavLink)`
 export const Linha = styled.div`
   background-color: #afafa7;
   height: 1px;
-  width: 85%;
+  width: 100%;
   margin-bottom: 40px;
   margin-top: 10px;
   @media only screen and (max-width: 768px) {

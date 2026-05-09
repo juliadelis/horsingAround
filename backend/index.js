@@ -3,12 +3,16 @@ const cors = require("cors");
 const { db } = require("./db.js");
 const multer = require("multer");
 const { storage } = require("./cloudinaryConfig.js");
+const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fieldSize: 50 * 1024 * 1024 }, // 50MB field size limit
+});
 
 app.use((req, res, next) => {
   //Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
@@ -21,85 +25,9 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
-app.post("/cavalos", upload.single("foto"), async (req, res) => {
-  try {
-    const horse =
-      await db`INSERT INTO cavalos (nome ,idade ,racao ,sexo ,raca ,feno ,medicacao ,aulas,nome_pai,nome_mae,peso,foto) VALUES (${
-        req.body.nome
-      },  ${req.body.idade},
-        ${req.body.racao},
-        ${req.body.sexo},
-        ${req.body.raca},
-        ${req.body.feno},
-        ${req.body.medicacao},
-        ${req.body.aulas},
-        ${req.body.nome_pai},
-        ${req.body.nome_mae},
-        ${req.body.peso},
-        ${req.file?.filename ? req.file?.filename : null})`;
-
-    return res.status(200).json("Cavalo has been crated.");
-  } catch (error) {
-    console.log(error);
-    return res.status(500);
-  }
-});
-
-app.put("/cavalos/:id", upload.single("foto"), async (req, res) => {
-  try {
-    const id = req.params.id;
-
-    if (req.file) {
-      const updateHorse =
-        await db`UPDATE cavalos SET nome=${req.body.nome}, idade=${req.body.idade}, racao=${req.body.racao}, sexo=${req.body.sexo}, raca=${req.body.raca}, feno=${req.body.feno}, medicacao=${req.body.medicacao}, aulas=${req.body.aulas}, nome_pai=${req.body.nome_pai}, nome_mae=${req.body.nome_mae}, peso=${req.body.peso}, foto=${req.file.filename} WHERE id=${id}`;
-
-      const values = [
-        req.body.nome,
-        req.body.idade,
-        req.body.racao,
-        req.body.sexo,
-        req.body.raca,
-        req.body.feno,
-        req.body.medicacao,
-        req.body.aulas,
-        req.body.nome_pai,
-        req.body.nome_mae,
-        req.body.peso,
-        req.file.filename,
-        id,
-      ];
-
-      return res.status(200).json("Cavalos has been edited.");
-    } else {
-      const updateHorse =
-        await db`UPDATE cavalos SET nome=${req.body.nome}, idade=${req.body.idade}, racao=${req.body.racao}, sexo=${req.body.sexo}, raca=${req.body.raca}, feno=${req.body.feno}, medicacao=${req.body.medicacao}, aulas=${req.body.aulas}, nome_pai=${req.body.nome_pai}, nome_mae=${req.body.nome_mae}, peso=${req.body.peso} WHERE id=${id}`;
-
-      const values = [
-        req.body.nome,
-        req.body.idade,
-        req.body.racao,
-        req.body.sexo,
-        req.body.raca,
-        req.body.feno,
-        req.body.medicacao,
-        req.body.aulas,
-        req.body.nome_pai,
-        req.body.nome_mae,
-        req.body.peso,
-        id,
-      ];
-
-      return res.status(200).json("Cavalos has been edited.");
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
 app.get("/cavalos", async (req, res) => {
   try {
-    const horses = await db`SELECT * FROM cavalos`;
+    const horses = await db`SELECT * FROM horses`;
     return res.status(200).json(horses);
   } catch (error) {
     console.log(error);
@@ -107,10 +35,144 @@ app.get("/cavalos", async (req, res) => {
   }
 });
 
+app.post("/cavalos", upload.single("foto"), async (req, res) => {
+  try {
+    const id = uuidv4();
+    const fotoUrl = req.file?.secure_url || req.file?.path || null;
+    const medicationTypeValue =
+      String(req.body.medication).toLowerCase() === "false"
+        ? null
+        : req.body.medicationtype || null;
+
+    await db`
+      INSERT INTO horses (
+        id,
+        name,
+        owner,
+        age,
+        foodamount,
+        gender,
+        breed,
+        hay,
+        medication,
+        medicationtype,
+        lessons,
+        fathersname,
+        mothersname,
+        weight,
+        pictureurl
+      )
+      VALUES (
+        ${id},
+        ${req.body.name},
+        ${req.body.owner},
+        ${req.body.age},
+        ${req.body.foodamount},
+        ${req.body.gender},
+        ${req.body.breed},
+        ${req.body.hay},
+        ${req.body.medication},
+        ${medicationTypeValue},
+        ${req.body.lessons},
+        ${req.body.fathersname},
+        ${req.body.mothersname},
+        ${req.body.weight},
+        ${fotoUrl}
+      )
+    `;
+
+    return res
+      .status(200)
+      .json({ message: "Cavalo has been created.", fotoUrl, id });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.put("/cavalos/:id", upload.single("foto"), async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const {
+      name,
+      owner,
+      age,
+      gender,
+      breed,
+      hay,
+      medication,
+      medicationtype,
+      lessons,
+      foodamount,
+      fathersname,
+      mothersname,
+      weight,
+    } = req.body;
+
+    console.log(req.body);
+
+    const fotoUrl = req.file?.secure_url || req.file?.path || null;
+
+    const medicationTypeValue =
+      String(medication).toLowerCase() === "false"
+        ? null
+        : medicationtype || null;
+
+    if (req.file) {
+      await db`
+        UPDATE horses
+        SET
+          name=${name},
+          owner=${owner},
+          age=${age},
+          foodamount=${foodamount},
+          gender=${gender},
+          breed=${breed},
+          hay=${Boolean(hay)},
+          medication=${Boolean(medication)},
+          medicationtype=${medicationTypeValue},
+          lessons=${lessons},
+          fathersname=${fathersname},
+          mothersname=${mothersname},
+          weight=${weight},
+          pictureurl=${fotoUrl}
+        WHERE id=${id}
+      `;
+    } else {
+      await db`
+        UPDATE horses
+        SET
+          name=${name},
+          owner=${owner},
+          age=${age},
+          foodamount=${foodamount},
+          gender=${gender},
+          breed=${breed},
+          hay=${Boolean(hay)},
+          medication=${Boolean(medication)},
+          medicationtype=${medicationTypeValue},
+          lessons=${lessons},
+          fathersname=${fathersname},
+          mothersname=${mothersname},
+          weight=${weight}
+        WHERE id=${id}
+      `;
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Cavalos has been edited.", fotoUrl });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/cavalos/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const horseId = await db`SELECT * FROM cavalos WHERE id = ${id}`;
+    const horseId = await db`SELECT * FROM horses WHERE id = ${id}`;
     return res.status(200).json(horseId);
   } catch (error) {
     console.log(error);
@@ -121,7 +183,7 @@ app.get("/cavalos/:id", async (req, res) => {
 app.delete("/cavalos/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const deleteHorse = await db`DELETE FROM cavalos WHERE id = ${id}`;
+    const deleteHorse = await db`DELETE FROM horses WHERE id = ${id}`;
     return res.status(200).json({
       message: "Cavalo excluido com sucesso",
     });

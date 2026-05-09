@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { Link } from "react-router-dom";
 
 const Cavalos = () => {
@@ -10,8 +10,8 @@ const Cavalos = () => {
   useEffect(() => {
     const fetchAllCavalos = async () => {
       try {
-        const res = await axios.get("https://horsing-api.vercel.app/cavalos");
-        console.log(res.data);
+        const res = await api.get("/cavalos");
+
         setCavalos(res.data);
       } catch (err) {
         console.log(err);
@@ -26,19 +26,19 @@ const Cavalos = () => {
       <div className="cavalos">
         {cavalos.map((cavalos) => (
           <div className="cavalo" key={cavalos.id}>
-            {cavalos.foto && <img src={cavalos.foto} alt="" />}
-            <h2>{cavalos.nome}</h2>
+            {cavalos.pictureURL && <img src={cavalos.pictureURL} alt="" />}
+            <h2>{cavalos.name}</h2>
 
-            <p>{cavalos.idade}</p>
-            <p>{cavalos.racao}</p>
-            <p>{cavalos.sexo}</p>
-            <p>{cavalos.raca}</p>
-            <p>{cavalos.feno}</p>
-            <p>{cavalos.medicacao}</p>
-            <p>{cavalos.aulas}</p>
-            <p>{cavalos.nome_pai}</p>
-            <p>{cavalos.nome_mae}</p>
-            <p>{cavalos.peso}</p>
+            <p>{cavalos.age}</p>
+            <p>{cavalos.foodAmount}</p>
+            <p>{cavalos.gender}</p>
+            <p>{cavalos.breed}</p>
+            <p>{cavalos.hay}</p>
+            <p>{cavalos.medication}</p>
+            <p>{cavalos.lessons}</p>
+            <p>{cavalos.fathersName}</p>
+            <p>{cavalos.mothersName}</p>
+            <p>{cavalos.weight}</p>
           </div>
         ))}
       </div>

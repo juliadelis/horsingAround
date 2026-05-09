@@ -10,7 +10,19 @@ export const Container = styled.div`
   margin: 30px;
   justify-content: space-between;
   @media only screen and (max-width: 768px) {
-    flex-direction: column-reverse;
+    margin-bottom: 0;
+    border-radius: 0;
+    margin-top: 0;
+    height: 100%;
+    margin: 0;
+    min-height: calc(100vh - 60px);
+  }
+
+  @media only screen and (max-width: 500px) {
+    margin-bottom: 0;
+    border-radius: 0;
+    margin-top: 0;
+    height: 100%;
   }
 `;
 
@@ -62,6 +74,7 @@ export const Item = styled.div`
   line-height: 36px;
   color: #22211c;
   text-transform: capitalize;
+  margin-right: 5px;
 `;
 
 export const ItemCorrespondente = styled.div`
@@ -77,7 +90,6 @@ export const ItemBanco = styled.div`
   line-height: 36px;
   color: #22211c;
   text-transform: capitalize;
-  margin-left: 10px;
   margin-right: 30px;
 `;
 
@@ -93,19 +105,18 @@ export const Img = styled.img`
 `;
 
 export const Container_E = styled.div`
-  width: 42%;
+  width: 55%;
   padding: 55px;
   @media only screen and (max-width: 500px) {
     width: 100%;
-    padding: 40px;
   }
   @media only screen and (max-width: 768px) {
-    width: 80%;
+    padding: 20px;
   }
 `;
 
 export const DivImg = styled.div`
-  width: 42%;
+  width: 45%;
   background-color: black;
   border-radius: 25px;
   align-items: center;
@@ -139,4 +150,5 @@ export const Hipica = styled.h2`
   font-size: 30px;
   line-height: 36px;
   color: #ffd08a;
+  margin-top: 20px;
 `;

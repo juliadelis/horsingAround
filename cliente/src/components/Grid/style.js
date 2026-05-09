@@ -9,11 +9,19 @@ export const Container = styled.div`
   padding: 55px;
   border-radius: 25px;
   width: 100%;
-  margin: 30px;
+
   justify-content: space-between;
 
   @media only screen and (max-width: 768px) {
-    width: 83%;
+    padding: 20px;
+    width: 100%;
+    border-radius: 0;
+    min-height: calc(100vh - 60px);
+  }
+
+  @media only screen and (max-width: 500px) {
+    margin: 0;
+    padding: 20px;
   }
 `;
 
@@ -27,18 +35,20 @@ export const Card = styled.div`
 
   align-items: flex-start;
   @media only screen and (max-width: 768px) {
-    width: 100%;
+    width: auto;
+    margin: 0px 20px;
   }
 `;
 
 export const CardText = styled.div`
-  margin-top: 20px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 20px;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 20px;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const ItemNome = styled.div`
@@ -65,6 +75,16 @@ export const ItemCorrespondente = styled.div`
   flex-direction: row;
   width: 45%;
   gap: 10px;
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+export const ItemMedicacao = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
 `;
 
 export const ItemBanco = styled.div`
@@ -73,7 +93,6 @@ export const ItemBanco = styled.div`
   font-size: 18px;
   line-height: 36px;
   color: #22211c;
-  text-transform: capitalize;
 `;
 
 export const ItemId = styled.div``;
@@ -81,9 +100,9 @@ export const ItemId = styled.div``;
 export const Img = styled.img`
   width: 100%;
   border-radius: 25px 25px 0px 0px;
-  margin-bottom: 20px;
-  height: 220px;
 
+  height: 260px;
+  object-position: top;
   object-fit: cover;
 `;
 
@@ -96,7 +115,7 @@ export const Botao = styled(Link)`
   color: #22211c;
   font-weight: 600;
   letter-spacing: 0.12em;
-  margin-left: 40px;
+  margin-left: 20px;
   transition: 0.5s;
   &:hover {
     border-radius: 55px;
