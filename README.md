@@ -5,7 +5,7 @@
 
 
 
-The project consists of horse management for horse racing, a complete platform. Designed to facilitate the administration and monitoring of horses at a horse riding facility, this application offers a robust and intuitive solution for the institution's managers and employees.
+The project consists of horse management for horse centers, a complete platform. Designed to facilitate the administration and monitoring of horses at a horse riding facility, this application offers a robust and intuitive solution for the institution's managers and employees.
 
 💻 Key Features:
 
