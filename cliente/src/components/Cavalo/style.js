@@ -71,6 +71,7 @@ export const Item = styled.div`
 `;
 export const Botoes = styled.div`
   width: 100%;
+  position: relative;
   @media only screen and (max-width: 768px) {
     display: flex;
   }
@@ -104,7 +105,7 @@ export const Img = styled.img`
   border-radius: 25px 25px 0px 0px;
 
   height: 449.54px;
-
+object-position: top;
   object-fit: cover;
   @media only screen and (max-width: 768px) {
     border-radius: 0;
@@ -175,7 +176,7 @@ export const Deletar = styled.button`
   color: #22211c;
   transition: 0.5s;
   position: absolute;
-  right: 13%;
+  right: 8%;
   top: 7%;
   &:hover {
     background-color: #f1b356;
@@ -207,5 +208,9 @@ export const Voltar = styled(Link)`
   &:hover {
     background-color: #f1b356;
     transition: 0.5s;
+  }
+
+   @media only screen and (max-width: 768px) {
+    left: 5%;
   }
 `;

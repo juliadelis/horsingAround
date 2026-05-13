@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Card,
   Container,
@@ -14,17 +15,63 @@ import {
   CardImg,
   DivImg,
 } from "./style.js";
-import axios from "axios";
 import { useHorseData } from "../../hooks/useHorseData";
+import { organizationService } from "../../services/organizationService";
 
 function Home() {
+  const { slug } = useParams();
   const { cavalosF, cavalosM, cavalos, cavalosMedicados, cavaloMaisUsado } =
     useHorseData();
+
+  const [organization, setOrganization] = useState(null);
+
+  useEffect(() => {
+    const loadOrganization = async () => {
+      try {
+        let orgId = localStorage.getItem("organizationId");
+        let selectedSlug = localStorage.getItem("organizationSlug");
+        const organizationSlug = slug || selectedSlug;
+
+        if (slug && selectedSlug && slug !== selectedSlug) {
+          orgId = null;
+          selectedSlug = slug;
+          localStorage.removeItem("organizationId");
+          localStorage.removeItem("organizationName");
+          localStorage.setItem("organizationSlug", slug);
+        }
+
+        if (!orgId && organizationSlug) {
+          const orgBySlug = await organizationService.getBySlug(organizationSlug);
+          if (orgBySlug) {
+            orgId = orgBySlug.id;
+            localStorage.setItem("organizationId", orgId);
+            localStorage.setItem("organizationName", orgBySlug.name);
+            localStorage.setItem("organizationSlug", orgBySlug.slug);
+          }
+        }
+
+        if (!orgId) {
+          return;
+        }
+
+        const data = await organizationService.getById(orgId);
+        setOrganization(data);
+      } catch (error) {
+        console.log("Erro ao buscar organização:", error);
+      }
+    };
+
+    loadOrganization();
+  }, [slug]);
+
+  if (!organization) {
+    return <h2>Carregando organização...</h2>;
+  }
 
   return (
     <Container>
       <Container_E>
-        <Hipica>Hípica Vale dos Anjos</Hipica>
+        <Hipica>Hípica {organization.name}</Hipica>
         <Card>
           <ItemNome>Total de cavalos na Hípica:</ItemNome>
           <ItemCorrespondente>

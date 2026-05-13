@@ -16,13 +16,14 @@ import {
   ButtonContainer,
 } from "./style.js";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import { useNavigate, useParams } from "react-router-dom";
 import { BiTrash } from "react-icons/bi";
+import { horseService } from "../../services/horseService";
 
 const Form = ({ initialData }) => {
   const ref = useRef();
   const navigate = useNavigate();
+  const { slug } = useParams();
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [cavalo, setCavalo] = useState(
     initialData
@@ -102,38 +103,35 @@ const Form = ({ initialData }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+
     try {
       const formData = new FormData();
+
       if (selectedFile) {
         formData.append("foto", selectedFile);
       }
+
       appendFields(cavalo, formData);
 
+      let response;
+
       if (initialData) {
-        const response = await api({
-          method: "put",
-          url: `/cavalos/${cavalo.id}`,
-          data: formData,
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        if (response.data.fotoUrl) {
-          setCavalo((prev) => ({ ...prev, pictureurl: response.data.fotoUrl }));
-        }
-        navigate("/cavalos");
+        response = await horseService.update(cavalo.id, formData);
       } else {
-        const response = await api({
-          method: "post",
-          url: `/cavalos`,
-          data: formData,
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        if (response.data.fotoUrl) {
-          setCavalo((prev) => ({ ...prev, pictureurl: response.data.fotoUrl }));
-        }
-        navigate("/cavalos");
+        response = await horseService.create(formData);
       }
+
+      if (response.fotoUrl) {
+        setCavalo((prev) => ({
+          ...prev,
+          pictureurl: response.fotoUrl,
+        }));
+      }
+
+      const targetPath = slug ? `/${slug}/cavalos` : "/organizacoes";
+      navigate(targetPath);
     } catch (err) {
-      console.log(err);
+      console.log("Erro ao salvar cavalo:", err);
     }
   };
 

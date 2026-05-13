@@ -1,34 +1,34 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Form from "../components/Form";
-import api from "../services/api";
+import { horseService } from "../services/horseService";
 
 const Update = () => {
-  const [cavalo, setcavalo] = useState(null);
-  const params = useParams();
+  const [cavalo, setCavalo] = useState(null);
+  const { id } = useParams();
+
   useEffect(() => {
     const getCavalo = async () => {
       try {
-        const { data } = await api.get(`/cavalos/${params.id}`);
-        const cavalo = data[0];
-        setcavalo(cavalo);
+        const data = await horseService.getById(id);
+
+        // se o backend retornar array
+        const cavaloData = Array.isArray(data) ? data[0] : data;
+
+        setCavalo(cavaloData);
       } catch (error) {
-        console.log(error);
+        console.log("Erro ao buscar cavalo:", error);
       }
     };
-    getCavalo();
-  }, []);
 
-  if (cavalo) {
-    return (
-      <>
-        <Form initialData={cavalo} />
-      </>
-    );
+    getCavalo();
+  }, [id]);
+
+  if (!cavalo) {
+    return <h2>Carregando...</h2>;
   }
 
-  return <h2>Carregando</h2>;
+  return <Form initialData={cavalo} />;
 };
 
 export default Update;

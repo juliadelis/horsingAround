@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import Icon from "../Icon";
+
 
 export const ContainerMaior = styled.div`
   position: relative;
@@ -29,19 +29,17 @@ export const Menu = styled.nav`
   background-color: #22211c;
 
   @media only screen and (max-width: 768px) {
-    top: 0;
-    left: 0;
-    flex-direction: row;
-    height: 60px;
+    flex-direction: column;
+    height: 100%;
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    padding-top: 12px;
-    padding-left: 0;
-    padding-bottom: 0;
-    padding-right: 0;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+    max-height: ${({ open }) => (open ? "100vh" : "60px")};
+    overflow: hidden;
+    transition: max-height 0.3s ease;
   }
 `;
 
@@ -85,16 +83,13 @@ export const Iconsvg = styled.div`
     height: 25px;
     margin-right: 10px;
   }
-  @media only screen and (max-width: 500px) {
-    display: none;
-  }
 `;
 
 export const Title = styled(NavLink)`
   letter-spacing: 0.04em;
   font-style: normal;
-  font-weight: 200;
-  font-size: 30px;
+  font-weight: ${({ $active }) => ($active ? "400" : "200")};
+  font-size: ${({ $active }) => ($active ? "28px" : "24px")};
   line-height: 36px;
   color: #afafa7;
   align-items: center;
@@ -102,87 +97,87 @@ export const Title = styled(NavLink)`
   padding-bottom: 30px;
   text-decoration: none;
   transition: 0.3s;
-  display: flex;
-  gap: 20px;
-  &:hover,
-  &:active,
-  &:visited,
-  &:focus,
-  &.active {
+  gap: 15px;
+
+  &:hover {
     font-weight: 400;
     color: #afafa7;
-    font-size: 30px;
-    line-height: 36px;
-    letter-spacing: 0.04em;
-    font-style: normal;
-    transition: 0.3s;
+    font-size: 28px;
     cursor: pointer;
   }
-  &:hover ${Iconsvg} {
-    background-color: #ffd08a;
-    padding: 5px;
-    color: #22211c;
-    transition: 0.3s;
-  }
-  &:focus ${Iconsvg} {
-    background-color: #ffd08a;
-    padding: 5px;
-    color: #22211c;
-    transition: 0.3s;
-  }
-  &.active ${Iconsvg} {
-    background-color: #ffd08a;
-    padding: 5px;
-    color: #22211c;
-    transition: 0.3s;
-  }
+
+  &:hover ${Iconsvg},
+  ${({ $active }) =>
+    $active &&
+    `
+      ${Iconsvg} {
+        background-color: #ffd08a;
+        padding: 5px;
+        color: #22211c;
+      }
+    `}
 
   @media only screen and (max-width: 768px) {
-    padding-bottom: 0px;
-    padding: 0 15px;
-    font-size: 20px;
-    color: #afafa7 !important;
-    padding-bottom: 10px;
-    &:active,
-    &:focus,
-    &.active {
-      font-weight: 400;
-      color: white !important;
-      font-size: 20px !important;
-      line-height: 36px;
-      letter-spacing: 0.04em;
-      font-style: normal;
-      transition: 0.3s;
-      cursor: pointer;
+    padding: 0 15px 10px;
+    font-size: 20px !important;
+    color: ${({ $active }) => ($active ? "white" : "#afafa7")} !important;
+    border-bottom: ${({ $active }) =>
+      $active ? "4px solid #ffd08a" : "none"};
 
-      border-bottom: 4px solid #ffd08a;
+    &:hover {
+      font-size: 20px !important;
     }
-    &:hover ${Iconsvg} {
-      background-color: transparent;
-      padding: 5px;
-      fill: white;
-      stroke: white;
-      width: 25px;
-      height: 25px;
-      transition: 0.3s;
-    }
-    &:focus ${Iconsvg} {
-      background-color: transparent;
-      padding: 5px;
-      fill: white;
-      stroke: white;
-      width: 25px;
-      height: 25px;
-      transition: 0.3s;
-    }
-    &.active ${Iconsvg} {
-      background-color: transparent;
-      padding: 5px;
-      fill: white;
-      stroke: white;
-      width: 25px;
-      height: 25px;
-      transition: 0.3s;
+
+    ${({ $active }) =>
+      $active &&
+      `
+        ${Iconsvg} {
+          background-color: transparent;
+          padding: 5px;
+          fill: white;
+          stroke: white;
+          width: 25px;
+          height: 25px;
+        }
+      `}
+  }
+`;
+
+export const MenuItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+
+  @media only screen and (max-width: 768px) {
+    padding: 70px 20px 20px;
+    display: ${({ open }) => (open ? "flex" : "none")};
+    gap: 15px;
+  }
+`;
+
+export const MobileToggle = styled.button`
+  display: none;
+  @media only screen and (max-width: 768px) {
+    display: flex;
+    position: absolute;
+    right: 20px;
+    top: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255, 208, 138, 0.15);
+    border: 1px solid rgba(255, 208, 138, 0.35);
+    color: #ffd08a;
+    cursor: pointer;
+    z-index: 30;
+    align-items: center;
+    justify-content: center;
+
+  
+
+    &:hover {
+      background: rgba(255, 208, 138, 0.25);
     }
   }
 `;
@@ -195,5 +190,33 @@ export const Linha = styled.div`
   margin-top: 10px;
   @media only screen and (max-width: 768px) {
     display: none;
+  }
+`;
+
+export const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 30px 0 40px 0;
+
+  @media only screen and (max-width: 768px) {
+    justify-content: start;
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    padding: 0;
+    z-index: 31;
+    pointer-events: none;
+  }
+`;
+
+export const Logo = styled.img`
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  
+  @media only screen and (max-width: 768px) {
+    height: 40px;
   }
 `;

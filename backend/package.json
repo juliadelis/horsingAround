@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
     "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.105.4",
     "cloudinary": "^1.36.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

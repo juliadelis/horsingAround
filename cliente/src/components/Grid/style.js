@@ -9,6 +9,7 @@ export const Container = styled.div`
   padding: 55px;
   border-radius: 25px;
   width: 100%;
+  height: 100%;
 
   justify-content: space-between;
 
@@ -107,19 +108,38 @@ export const Img = styled.img`
 `;
 
 export const Botao = styled(Link)`
-  padding: 10px;
+  padding: 10px 18px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
   border: none;
   background-color: #ffd08a;
   color: #22211c;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   margin-left: 20px;
-  transition: 0.5s;
+  transition: 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   &:hover {
-    border-radius: 55px;
-    color: #22211c;
-    transition: 0.5s;
+    box-shadow: 8px 13px 42.8px #ffd08a40;
+  }
+`;
+
+export const EmptyState = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  border-radius: 25px;
+  h2 {
+    font-size: 24px;
+    color: white;
+    margin: 0;
   }
 `;

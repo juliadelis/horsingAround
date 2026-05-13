@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import api from "../services/api";
+import { horseService } from "../services/horseServices";
 import { Link } from "react-router-dom";
 
 const Cavalos = () => {
@@ -10,7 +10,7 @@ const Cavalos = () => {
   useEffect(() => {
     const fetchAllCavalos = async () => {
       try {
-        const res = await api.get("/cavalos");
+        const res = await horseService.getAll();
 
         setCavalos(res.data);
       } catch (err) {
