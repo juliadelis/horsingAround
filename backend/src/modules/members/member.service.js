@@ -95,10 +95,12 @@ async function getMembers(organizationId) {
           const { data: userData, error } =
             await supabaseAdmin.auth.admin.getUserById(member.user_id);
           if (!error && userData.user) {
+            const metadata = userData.user.raw_user_meta_data || {};
+
             return {
               ...member,
-              phone: userData.user.raw_user_meta_data?.phone || null,
-              name: userData.user.raw_user_meta_data?.name || member.name,
+              phone: metadata.phone || member.phone || null,
+              name: metadata.name || member.name || member.name_member,
             };
           }
         } catch (err) {
