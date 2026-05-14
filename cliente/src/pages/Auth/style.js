@@ -22,6 +22,7 @@ export const ImageSection = styled.div`
   @media only screen and (max-width: 900px) {
     min-height: 320px;
     width: 100%;
+    display: none;
   }
 `;
 
@@ -30,7 +31,7 @@ export const FormSection = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+ 
   background-color: #22211c;
 
   @media only screen and (max-width: 900px) {
@@ -41,10 +42,10 @@ export const FormSection = styled.div`
 export const Card = styled.div`
   width: 100%;
   max-width: 480px;
-  background: rgba(42, 39, 32, 0.98);
+ 
   border-radius: 30px;
   padding: 48px 44px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+ 
 
   @media only screen and (max-width: 500px) {
     padding: 32px 24px;
@@ -56,6 +57,7 @@ export const Logo = styled.img`
   width: 90px;
   display: block;
   margin-bottom: 24px;
+  justify-self: center;
 `;
 
 export const Brand = styled.h1`
@@ -64,6 +66,7 @@ export const Brand = styled.h1`
   margin: 0 0 40px;
   color: #ffd08a;
   letter-spacing: -0.03em;
+  justify-self: center;
 
   @media only screen and (max-width: 500px) {
     font-size: 32px;
@@ -76,6 +79,7 @@ export const FormTitle = styled.h2`
   margin: 0 0 30px;
   color: #fff;
   font-weight: 500;
+  
 `;
 
 export const Input = styled.input`
