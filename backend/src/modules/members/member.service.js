@@ -1,5 +1,83 @@
 const { db } = require("../../config/db");
-const { supabase } = require("../../config/supabase");
+const { supabase, supabaseAdmin } = require("../../config/supabase");
+
+const normalizeEmail = (email) => email.trim().toLowerCase();
+const normalizePhone = (phone) => {
+  const digits = String(phone || "").replace(/\D/g, "");
+  return digits || null;
+};
+
+const getInviteRedirectUrl = (email, isRegistered) => {
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const url = new URL("/login", frontendUrl);
+  url.searchParams.set("email", email);
+  url.searchParams.set("mode", isRegistered ? "login" : "register");
+  return url.toString();
+};
+
+async function findUserByEmail(email) {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null;
+  }
+
+  let page = 1;
+  const perPage = 1000;
+
+  while (true) {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+      page,
+      perPage,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const user = data.users.find(
+      (authUser) => authUser.email?.toLowerCase() === email,
+    );
+
+    if (user || data.users.length < perPage) {
+      return user ?? null;
+    }
+
+    page += 1;
+  }
+}
+
+async function sendMemberInvite(email, isRegistered) {
+  const emailRedirectTo = getInviteRedirectUrl(email, isRegistered);
+
+  if (isRegistered) {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo,
+      },
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return "login_email_sent";
+  }
+
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return "not_sent_missing_service_role";
+  }
+
+  const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+    redirectTo: emailRedirectTo,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return "invite_sent";
+}
 
 async function getMembers(organizationId) {
   const members = await db`
@@ -14,7 +92,8 @@ async function getMembers(organizationId) {
     members.map(async (member) => {
       if (member.user_id) {
         try {
-          const { data: userData, error } = await supabase.auth.admin.getUserById(member.user_id);
+          const { data: userData, error } =
+            await supabaseAdmin.auth.admin.getUserById(member.user_id);
           if (!error && userData.user) {
             return {
               ...member,
@@ -34,28 +113,26 @@ async function getMembers(organizationId) {
 }
 
 async function createMember(organizationId, creatorId, data) {
-  let memberUserId = null;
+  const email = normalizeEmail(data.email);
+  const phone = normalizePhone(data.phone);
 
-  if (data.password) {
-    const { data: signupData, error } = await supabase.auth.signUp(
-      {
-        email: data.email,
-        password: data.password,
-      },
-      {
-        data: {
-          name: data.name || null,
-          phone: data.phone || null,
-        },
-      },
-    );
+  const existingMember = await db`
+    SELECT *
+    FROM organization_members
+    WHERE organization_id = ${organizationId}
+    AND lower(email) = ${email}
+    LIMIT 1
+  `;
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    memberUserId = signupData.user?.id ?? null;
+  if (existingMember.length > 0) {
+    return {
+      member: existingMember[0],
+      invitationStatus: "already_member",
+    };
   }
+
+  const existingUser = await findUserByEmail(email);
+  const memberUserId = existingUser?.id ?? null;
 
   const member = await db`
     INSERT INTO organization_members (
@@ -71,24 +148,34 @@ async function createMember(organizationId, creatorId, data) {
       ${organizationId},
       ${memberUserId},
       ${data.name},
-      ${data.email},
-      ${data.phone || null},
+      ${email},
+      ${phone},
       ${data.role},
       ${creatorId}
     )
     RETURNING *
   `;
 
-  return member[0];
+  const invitationStatus = await sendMemberInvite(email, Boolean(existingUser));
+
+  return {
+    member: member[0],
+    invitationStatus,
+  };
 }
 
 async function updateMember(organizationId, memberId, data) {
+  const email = normalizeEmail(data.email);
+  const phone = normalizePhone(data.phone);
+  const existingUser = await findUserByEmail(email);
+
   const member = await db`
     UPDATE organization_members
     SET
       name = ${data.name},
-      email = ${data.email},
-      phone = ${data.phone || null},
+      email = ${email},
+      user_id = COALESCE(user_id, ${existingUser?.id ?? null}),
+      phone = ${phone},
       role = ${data.role}
     WHERE id = ${memberId}
     AND organization_id = ${organizationId}

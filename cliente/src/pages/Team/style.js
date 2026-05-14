@@ -110,6 +110,12 @@ export const AddButton = styled.button`
     box-shadow: 8px 13px 42.8px #ffd08a40;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+  }
+
   @media (max-width: 768px) {
     align-self: flex-start;
     padding: 0.7rem 1rem;
@@ -198,6 +204,12 @@ export const DeleteButton = styled.button`
   &:hover {
    box-shadow: 8px 13px 42.8px #ffd08a40;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+  }
 `;
 
 export const CancelButton = styled.button`
@@ -211,6 +223,12 @@ export const CancelButton = styled.button`
 
   &:hover {
     background: rgba(255, 255, 255, 0.12);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    background: transparent;
   }
 `;
 
@@ -238,6 +256,11 @@ export const Input = styled.input`
   &::placeholder {
     color: rgba(247, 241, 220, 0.55);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
 `;
 
 export const Select = styled.select`
@@ -259,6 +282,11 @@ export const Select = styled.select`
     outline: none;
     border-color: #d19f4f;
     box-shadow: 0 0 0 3px rgba(209, 159, 79, 0.15);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 `;
 

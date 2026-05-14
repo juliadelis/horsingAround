@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Dialog } from "primereact/dialog";
-import { useAuth } from "../../contexts/AuthContext";
 import { memberService } from "../../services/memberService";
 import {
   dialogStyles,
@@ -15,7 +12,6 @@ import {
   Title,
   Subtitle,
   AddButton,
-  LogoutButton,
   Card,
   Table,
   Th,
@@ -25,15 +21,10 @@ import {
   Input,
   Select,
   FormActions,
-  CredentialsBox,
   EmptyState,
   LoadingState,
   Spinner,
-  PasswordWrapper,
-  TogglePassword,
-  Footer,
 } from "./style";
-import { FiLogOut } from "react-icons/fi";
 
 const roleOptions = [
   { value: "admin", label: "Admin" },
@@ -46,20 +37,17 @@ const Team = () => {
   const [members, setMembers] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
-  const [newCredentials, setNewCredentials] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
-    password: "",
     phone: "",
     role: "admin",
   });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
 
   const organizationName =
     localStorage.getItem("organizationName") || "Organização";
@@ -92,17 +80,6 @@ const Team = () => {
     };
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      localStorage.removeItem("organizationName");
-      navigate("/login");
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-      toast.error("Não foi possível sair. Tente novamente.");
-    }
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -128,11 +105,9 @@ const Team = () => {
 
   const openCreateDialog = () => {
     setEditingMember(null);
-    setShowPassword(false);
     setForm({
       name: "",
       email: "",
-      password: "",
       phone: "",
       role: "admin",
     });
@@ -151,13 +126,14 @@ const Team = () => {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
+  const normalizePhone = (phone) => phone.replace(/\D/g, "") || null;
+  const normalizeEmail = (email) => email.trim().toLowerCase();
+
   const openEditDialog = (member) => {
     setEditingMember(member);
-    setShowPassword(false);
     setForm({
       name: member.name || "",
       email: member.email || "",
-      password: "", // Não preencher senha na edição
       phone: formatPhone(member.phone),
       role: member.role || "admin",
     });
@@ -165,42 +141,79 @@ const Team = () => {
   };
 
   const closeDialog = () => {
+    if (submitting) return;
+
     setDialogVisible(false);
     setEditingMember(null);
-    setNewCredentials(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.email) {
-      toast.error("Preencha nome e e-mail do membro.");
+    if (!form.email) {
+      toast.error("Preencha o e-mail do membro.");
       return;
     }
 
-    if (!editingMember && !form.password) {
-      toast.error("Preencha a senha do membro.");
+    const emailAlreadyListed = members.some(
+      (member) =>
+        normalizeEmail(member.email) === normalizeEmail(form.email) &&
+        member.id !== editingMember?.id,
+    );
+
+    if (emailAlreadyListed) {
+      toast.info("Este e-mail já está na lista de membros desta organização.");
       return;
     }
 
     try {
+      setSubmitting(true);
       let result;
+      const payload = {
+        ...form,
+        phone: normalizePhone(form.phone),
+      };
+
       if (editingMember) {
-        result = await memberService.update(editingMember.id, form);
+        result = await memberService.update(editingMember.id, payload);
         setMembers((prev) =>
           prev.map((member) =>
             member.id === editingMember.id
-              ? { ...result, phone: form.phone }
+              ? { ...result, phone: payload.phone }
               : member
           )
         );
         toast.success("Membro atualizado com sucesso.");
       } else {
-        result = await memberService.create(form);
-        const createdMember = { ...(result.member ?? result), phone: form.phone };
-        setMembers((prev) => [createdMember, ...prev]);
-        setNewCredentials(result.credentials ?? null);
-        toast.success("Membro adicionado com sucesso.");
+        result = await memberService.create(payload);
+
+        if (result.invitationStatus === "already_member") {
+          toast.info("Este e-mail já está na lista de membros desta organização.");
+          closeDialog();
+          return;
+        }
+
+        const createdMember = { ...(result.member ?? result), phone: payload.phone };
+        setMembers((prev) => {
+          const alreadyListed = prev.some(
+            (member) => member.id === createdMember.id,
+          );
+
+          if (alreadyListed) {
+            return prev.map((member) =>
+              member.id === createdMember.id ? createdMember : member,
+            );
+          }
+
+          return [createdMember, ...prev];
+        });
+        if (result.invitationStatus === "not_sent_missing_service_role") {
+          toast.warning(
+            "Membro autorizado, mas configure a service role do Supabase para enviar convites.",
+          );
+        } else {
+          toast.success("Convite enviado e membro autorizado com sucesso.");
+        }
       }
 
       closeDialog();
@@ -209,6 +222,8 @@ const Team = () => {
       toast.error(
         error?.response?.data?.error || error?.message || "Erro ao salvar membro.",
       );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -221,6 +236,7 @@ const Team = () => {
     if (!memberToDelete) return;
 
     try {
+      setDeleting(true);
       await memberService.delete(memberToDelete.id);
       setMembers((prev) => prev.filter((member) => member.id !== memberToDelete.id));
       toast.success("Membro removido com sucesso.");
@@ -228,12 +244,15 @@ const Team = () => {
       console.error("Erro ao remover membro:", error);
       toast.error("Não foi possível remover o membro.");
     } finally {
+      setDeleting(false);
       setDeleteDialogVisible(false);
       setMemberToDelete(null);
     }
   };
 
   const cancelDelete = () => {
+    if (deleting) return;
+
     setDeleteDialogVisible(false);
     setMemberToDelete(null);
   };
@@ -253,15 +272,6 @@ const Team = () => {
       </Header>
 
       <Card>
-        {newCredentials && (
-          <CredentialsBox>
-            <strong>Credenciais criadas:</strong>
-            <span>
-              Login: {newCredentials.email} | Senha: {newCredentials.password}
-            </span>
-          </CredentialsBox>
-        )}
-
         {loading ? (
           <LoadingState>
             <Spinner />
@@ -321,11 +331,16 @@ const Team = () => {
         className="p-fluid"
         footer={
           <FormActions>
-            <CancelButton type="button" onClick={cancelDelete} style={{ marginRight: "12px" }}>
+            <CancelButton
+              type="button"
+              onClick={cancelDelete}
+              disabled={deleting}
+              style={{ marginRight: "12px" }}
+            >
               Cancelar
             </CancelButton>
-            <DeleteButton type="button" onClick={confirmDelete}>
-              Excluir
+            <DeleteButton type="button" onClick={confirmDelete} disabled={deleting}>
+              {deleting ? "Excluindo..." : "Excluir"}
             </DeleteButton>
           </FormActions>
         }
@@ -350,7 +365,7 @@ const Team = () => {
             value={form.name}
             onChange={handleChange}
             placeholder="Nome"
-            required
+            disabled={submitting}
           />
           <Input
             name="email"
@@ -359,6 +374,7 @@ const Team = () => {
             onChange={handleChange}
             placeholder="Email"
             required
+            disabled={submitting}
           />
           <Input
             name="phone"
@@ -366,31 +382,14 @@ const Team = () => {
             value={form.phone}
             onChange={handleChange}
             placeholder="Telefone"
+            disabled={submitting}
           />
-          {!editingMember && (
-            <PasswordWrapper>
-              <Input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Senha de acesso"
-                required
-              />
-              <TogglePassword
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-              >
-                {showPassword ? <FaRegEyeSlash size={18} /> : <FaRegEye size={18} />}
-              </TogglePassword>
-            </PasswordWrapper>
-          )}
           <Select
             name="role"
             value={form.role}
             onChange={handleChange}
             required
+            disabled={submitting}
           >
             {roleOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -399,8 +398,14 @@ const Team = () => {
             ))}
           </Select>
           <FormActions>
-            <AddButton type="submit">
-              {editingMember ? "Atualizar" : "Salvar"} membro
+            <AddButton type="submit" disabled={submitting}>
+              {submitting
+                ? editingMember
+                  ? "Atualizando..."
+                  : "Enviando convite..."
+                : editingMember
+                ? "Atualizar membro"
+                : "Enviar convite"}
             </AddButton>
           </FormActions>
         </MemberForm>

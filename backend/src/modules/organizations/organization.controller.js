@@ -4,6 +4,7 @@ async function getOrganizations(req, res) {
   try {
     const organizations = await organizationService.getOrganizations(
       req.user.id,
+      req.user.email,
     );
 
     return res.status(200).json(organizations);

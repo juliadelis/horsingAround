@@ -55,6 +55,10 @@ export const AuthProvider = ({ children }) => {
     return await supabase.auth.signOut();
   };
 
+  const updateUser = async (data) => {
+    return await supabase.auth.updateUser(data);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -64,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         signIn,
         signOut,
+        updateUser,
       }}>
       {children}
     </AuthContext.Provider>

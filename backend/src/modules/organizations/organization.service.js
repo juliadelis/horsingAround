@@ -1,6 +1,13 @@
 const { db } = require("../../config/db");
 
-async function getOrganizations(userId) {
+async function getOrganizations(userId, email) {
+  await db`
+    UPDATE organization_members
+    SET user_id = ${userId}
+    WHERE user_id IS NULL
+    AND lower(email) = lower(${email})
+  `;
+
   return await db`
     SELECT o.*,
            COUNT(h.id) as horse_count
