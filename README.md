@@ -86,6 +86,7 @@ Veterinarian horse editing is limited to:
 - Gender
 - Father name
 - Mother name
+- Breed
 
 This prevents sensitive organization and team operations from being available to non-admin roles while still allowing each role to update the operational data they are responsible for.
 
