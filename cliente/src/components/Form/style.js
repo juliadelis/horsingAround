@@ -1,4 +1,10 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const FormContainer = styled.form`
   display: flex;
@@ -42,6 +48,29 @@ export const Input = styled.input`
   }
 `;
 
+export const InputWithSuffix = styled.div`
+  position: relative;
+  width: 170px;
+
+  ${Input} {
+    width: 100%;
+    padding-right: 38px;
+  }
+
+  @media only screen and (max-width: 500px) {
+    width: 270px;
+  }
+`;
+
+export const InputSuffix = styled.span`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+`;
+
 export const Label = styled.label``;
 
 export const Button = styled.button`
@@ -57,6 +86,12 @@ export const Button = styled.button`
   letter-spacing: 0.12em;
   transition: all 0.3s;
   border: 1px solid #ffd08a;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
   @media only screen and (max-width: 800px) {
     margin-left: 17vw;
   }
@@ -69,6 +104,11 @@ export const Button = styled.button`
     background-color: #22211c;
     border: 1px solid #ffd08a;
     color: #ffd08a;
+  }
+
+  &:disabled:hover {
+    background-color: #ffd08a;
+    color: #22211c;
   }
 `;
 
@@ -143,6 +183,27 @@ export const DeleteButton = styled.button`
 
 export const ButtonContainer = styled.div`
   width: 100%;
+`;
+
+export const LoadingState = styled.div`
+  width: 100%;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+`;
+
+export const Spinner = styled.div`
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #ffd08a;
+  border-radius: 50%;
+  animation: ${spin} 0.8s linear infinite;
 `;
 
 export const Option = styled.select`

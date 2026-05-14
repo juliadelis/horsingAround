@@ -4,6 +4,8 @@ import {
   FormContainer,
   InputArea,
   Input,
+  InputWithSuffix,
+  InputSuffix,
   Label,
   InputFoto,
   Option,
@@ -14,17 +16,21 @@ import {
   PreviewImage,
   DeleteButton,
   ButtonContainer,
+  LoadingState,
+  Spinner,
 } from "./style.js";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BiTrash } from "react-icons/bi";
 import { horseService } from "../../services/horseService";
+import { toast } from "react-toastify";
 
 const Form = ({ initialData }) => {
   const ref = useRef();
   const navigate = useNavigate();
   const { slug } = useParams();
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [saving, setSaving] = useState(false);
   const [cavalo, setCavalo] = useState(
     initialData
       ? initialData
@@ -123,7 +129,10 @@ const Form = ({ initialData }) => {
   const handleClick = async (e) => {
     e.preventDefault();
 
+    if (saving) return;
+
     try {
+      setSaving(true);
       const formData = new FormData();
 
       if (selectedFile) {
@@ -147,18 +156,42 @@ const Form = ({ initialData }) => {
         }));
       }
 
+      toast.success(
+        initialData
+          ? "Cavalo atualizado com sucesso."
+          : "Cavalo cadastrado com sucesso.",
+      );
+
       const targetPath = slug ? `/${slug}/cavalos` : "/organizacoes";
       navigate(targetPath);
     } catch (err) {
       console.log("Erro ao salvar cavalo:", err);
+      toast.error(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Não foi possível salvar o cavalo.",
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
   const isMedicationTrue =
     cavalo?.medication === "true" || cavalo?.medication === true;
 
+  if (saving) {
+    return (
+      <FormContainer ref={ref}>
+        <LoadingState>
+          <Spinner />
+          Salvando cavalo...
+        </LoadingState>
+      </FormContainer>
+    );
+  }
+
   return (
-    <FormContainer ref={ref}>
+    <FormContainer ref={ref} onSubmit={handleClick}>
       <InputArea>
         <Label>Nome</Label>
         <Input
@@ -189,14 +222,17 @@ const Form = ({ initialData }) => {
       </InputArea>
       <InputArea>
         <Label>Ração</Label>
-        <Input
-          value={cavalo.foodamount}
-          type="number"
-          min="0"
-          step="0.01"
-          onChange={handleChange}
-          name="foodamount"
-        />
+        <InputWithSuffix>
+          <Input
+            value={cavalo.foodamount}
+            type="number"
+            min="0"
+            step="0.01"
+            onChange={handleChange}
+            name="foodamount"
+          />
+          <InputSuffix>Kg</InputSuffix>
+        </InputWithSuffix>
       </InputArea>
       <InputArea>
         <Label>Sexo</Label>
@@ -301,14 +337,17 @@ const Form = ({ initialData }) => {
       </InputArea>
       <InputArea>
         <Label>Peso</Label>
-        <Input
-          value={cavalo.weight}
-          type="number"
-          min="0"
-          step="0.01"
-          onChange={handleChange}
-          name="weight"
-        />
+        <InputWithSuffix>
+          <Input
+            value={cavalo.weight}
+            type="number"
+            min="0"
+            step="0.01"
+            onChange={handleChange}
+            name="weight"
+          />
+          <InputSuffix>Kg</InputSuffix>
+        </InputWithSuffix>
       </InputArea>
       <InputArea>
         <Label>Foto</Label>
@@ -324,7 +363,7 @@ const Form = ({ initialData }) => {
           {selectedFile && (
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <FileName>{selectedFile.name}</FileName>
-              <DeleteButton onClick={handleDeleteSelection}>
+              <DeleteButton type="button" onClick={handleDeleteSelection}>
                 <BiTrash size={20} />
               </DeleteButton>
             </div>
@@ -337,7 +376,7 @@ const Form = ({ initialData }) => {
         </FileInputWrapper>
       </InputArea>
       <ButtonContainer>
-        <Button type="submit" onClick={handleClick}>
+        <Button type="submit" disabled={saving}>
           SALVAR
         </Button>
       </ButtonContainer>
