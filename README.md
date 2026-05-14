@@ -2,7 +2,7 @@
 
 Horsing Around is a full-stack horse management platform for riding schools, stables, and equestrian organizations. It centralizes horse records, operational dashboards, organization access, and team member authorization in a private workspace.
 
-Live project: https://horsing-around.vercel.app/
+Live project: <a href="https://horsing-around.vercel.app/" target="_blank" rel="noopener noreferrer">https://horsing-around.vercel.app/</a>
 
 ## Product Preview
 
@@ -217,4 +217,3 @@ If the frontend environment file is used in your deployment, keep only public cl
 - Backend modules are organized by domain.
 - Member invitations are idempotent by organization email.
 - Loading and toast states are implemented across critical save and delete flows.
-
