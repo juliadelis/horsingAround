@@ -21,32 +21,42 @@ import loginImage from "../../assets/login-img.png";
 import logoIcon from "../../assets/icon.svg";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
+const initialForm = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  phone: "",
+};
 
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signIn, signUp, updateUser, user } = useAuth();
+  const { signIn, signUp, updateUser, resetPasswordForEmail, user } = useAuth();
 
-  const [isRegister, setIsRegister] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-  });
+  const [form, setForm] = useState(initialForm);
+
+  const isRegister = authMode === "register";
+  const isForgotPassword = authMode === "forgot";
+  const isResetPassword = authMode === "reset";
 
   useEffect(() => {
     const email = searchParams.get("email");
     const mode = searchParams.get("mode");
 
     if (mode === "register") {
-      setIsRegister(true);
+      setAuthMode("register");
     }
 
     if (mode === "login") {
-      setIsRegister(false);
+      setAuthMode("login");
+    }
+
+    if (mode === "reset") {
+      setAuthMode("reset");
     }
 
     if (email) {
@@ -110,11 +120,52 @@ const Auth = () => {
     return message;
   };
 
+  const handleForgotPassword = async () => {
+    const response = await resetPasswordForEmail(form.email);
+
+    if (response.error) {
+      toast.error(translateAuthError(response.error.message));
+      return;
+    }
+
+    toast.success("Enviamos um link de recuperação para o seu e-mail.");
+    setAuthMode("login");
+  };
+
+  const handleResetPassword = async () => {
+    if (form.password !== form.confirmPassword) {
+      toast.error("As senhas não conferem.");
+      return;
+    }
+
+    const response = await updateUser({
+      password: form.password,
+    });
+
+    if (response.error) {
+      toast.error(translateAuthError(response.error.message));
+      return;
+    }
+
+    toast.success("Senha atualizada com sucesso.");
+    navigate("/organizacoes");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      if (isForgotPassword) {
+        await handleForgotPassword();
+        return;
+      }
+
+      if (isResetPassword) {
+        await handleResetPassword();
+        return;
+      }
+
       const metadata = {
         name: form.name,
         phone: normalizePhoneForAuth(form.phone),
@@ -146,8 +197,39 @@ const Auth = () => {
   };
 
   const toggleMode = () => {
-    setIsRegister((prev) => !prev);
-    setForm({ name: "", email: "", password: "", phone: "" });
+    setAuthMode((prev) => (prev === "register" ? "login" : "register"));
+    setForm(initialForm);
+    setShowPassword(false);
+  };
+
+  const openForgotPassword = () => {
+    setAuthMode("forgot");
+    setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+    setShowPassword(false);
+  };
+
+  const backToLogin = () => {
+    setAuthMode("login");
+    setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+    setShowPassword(false);
+  };
+
+  const getTitle = () => {
+    if (isForgotPassword) return "Recuperar senha";
+    if (isResetPassword) return "Redefinir senha";
+    return isRegister ? "Criar conta" : "Entrar";
+  };
+
+  const getSubmitLabel = () => {
+    if (loading) {
+      if (isForgotPassword) return "Enviando...";
+      if (isResetPassword) return "Salvando...";
+      return isRegister ? "Cadastrando..." : "Entrando...";
+    }
+
+    if (isForgotPassword) return "Enviar link de recuperação";
+    if (isResetPassword) return "Salvar nova senha";
+    return isRegister ? "Cadastrar" : "Entrar";
   };
 
   return (
@@ -158,7 +240,7 @@ const Auth = () => {
           <Logo src={logoIcon} alt="Horsing Around" />
           <Brand>Horsing Around</Brand>
 
-          <FormTitle>{isRegister ? "Criar conta" : "Entrar"}</FormTitle>
+          <FormTitle>{getTitle()}</FormTitle>
 
           <form onSubmit={handleSubmit}>
             {isRegister && (
@@ -171,28 +253,49 @@ const Auth = () => {
               />
             )}
 
-            <Input
-              name="email"
-              type="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-            />
-
-            <PasswordWrapper>
+            {!isResetPassword && (
               <Input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Senha"
-                value={form.password}
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={form.email}
                 onChange={handleChange}
+                required
               />
-              <TogglePassword
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}>
-                {showPassword ? <FaRegEyeSlash size={18} /> : <FaRegEye size={18}/>}
-              </TogglePassword>
-            </PasswordWrapper>
+            )}
+
+            {!isForgotPassword && (
+              <PasswordWrapper>
+                <Input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder={isResetPassword ? "Nova senha" : "Senha"}
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                />
+                <TogglePassword
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}>
+                  {showPassword ? (
+                    <FaRegEyeSlash size={18} />
+                  ) : (
+                    <FaRegEye size={18} />
+                  )}
+                </TogglePassword>
+              </PasswordWrapper>
+            )}
+
+            {isResetPassword && (
+              <Input
+                name="confirmPassword"
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirmar nova senha"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            )}
 
             {isRegister && (
               <Input
@@ -206,22 +309,30 @@ const Auth = () => {
             )}
 
             <SubmitButton type="submit" disabled={loading}>
-              {loading
-                ? isRegister
-                  ? "Cadastrando..."
-                  : "Entrando..."
-                : isRegister
-                ? "Cadastrar"
-                : "Entrar"}
+              {getSubmitLabel()}
             </SubmitButton>
           </form>
 
-          <FooterText>
-            {isRegister ? "Já tem uma conta?" : "Não tem uma conta?"}
-            <SwitchLink onClick={toggleMode}>
-              {isRegister ? "Fazer login" : "Cadastrar-se"}
-            </SwitchLink>
-          </FooterText>
+          {!isRegister && !isForgotPassword && !isResetPassword && (
+            <FooterText>
+              <SwitchLink onClick={openForgotPassword}>
+                Esqueci minha senha
+              </SwitchLink>
+            </FooterText>
+          )}
+
+          {!isResetPassword && (
+            <FooterText>
+              {isForgotPassword
+                ? "Lembrou sua senha?"
+                : isRegister
+                ? "Já tem uma conta?"
+                : "Não tem uma conta?"}
+              <SwitchLink onClick={isForgotPassword ? backToLogin : toggleMode}>
+                {isForgotPassword || isRegister ? "Fazer login" : "Cadastrar-se"}
+              </SwitchLink>
+            </FooterText>
+          )}
         </Card>
       </FormSection>
     </PageContainer>
