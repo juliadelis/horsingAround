@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 import { organizationService } from "../../services/organizationService";
-import { Container, Title, IconOrg, Card, Botao, Form, Header, Organizacao } from "./style.js";
+import { Container, Title, IconOrg, Card, Botao, Form, Header, Organizacao, LoadingState, Spinner } from "./style.js";
 import { TbHorseshoe } from "react-icons/tb";
 import { FiPlus } from "react-icons/fi";
 
@@ -10,6 +10,7 @@ const Organizations = () => {
   const navigate = useNavigate();
   const [organizations, setOrganizations] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -17,8 +18,13 @@ const Organizations = () => {
   });
 
   const loadOrganizations = async () => {
-    const data = await organizationService.getAll();
-    setOrganizations(data);
+    setLoading(true);
+    try {
+      const data = await organizationService.getAll();
+      setOrganizations(data);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -63,27 +69,34 @@ const Organizations = () => {
       <Title>Minhas organizações</Title>
 
       <Organizacao>
+        {loading ? (
+          <LoadingState>
+            <Spinner />
+            Carregando organizações...
+          </LoadingState>
+        ) : organizations.length === 0 ? (
+          <LoadingState>Nenhuma organização cadastrada.</LoadingState>
+        ) : (
+          organizations.map((organization) => (
+            <Card
+              key={organization.id}
+              onClick={() => selectOrganization(organization)}>
+              <IconOrg>
+                <TbHorseshoe size={30} />
+              </IconOrg>
+              <div>
+                <h2>{organization.name}</h2>
 
-      {organizations.map((organization) => (
-        <Card
-          key={organization.id}
-          onClick={() => selectOrganization(organization)}>
-          <IconOrg>
-            <TbHorseshoe size={30} />
-          </IconOrg>
-          <div>
-            <h2>{organization.name}</h2>
-
-            <p>
-              {getHorsesCount(organization)}{" "}
-              {getHorsesCount(organization) === 1
-                ? "Cavalo cadastrado"
-                : "Cavalos cadastrados"}
-            </p>
-          </div>
-        </Card>
-      ))}
-
+                <p>
+                  {getHorsesCount(organization)}{" "}
+                  {getHorsesCount(organization) === 1
+                    ? "Cavalo cadastrado"
+                    : "Cavalos cadastrados"}
+                </p>
+              </div>
+            </Card>
+          ))
+        )}
       </Organizacao>
 
       <div>

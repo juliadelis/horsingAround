@@ -14,6 +14,8 @@ import {
   Deletar,
   SvgTrash,
   Voltar,
+  LoadingState,
+  Spinner,
 } from "./style.js";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -24,15 +26,19 @@ import { horseService } from "../../services/horseService";
 
 const VerCavalo = () => {
   const [cavalo, setcavalo] = useState(null);
+  const [loading, setLoading] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   useEffect(() => {
     const getCavalo = async () => {
+      setLoading(true);
       try {
         const data = await horseService.getById(params.id);
         setcavalo(data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     getCavalo();
@@ -47,6 +53,17 @@ const VerCavalo = () => {
     }
   };
   console.log(cavalo);
+  if (loading) {
+    return (
+      <Container>
+        <LoadingState>
+          <Spinner />
+          Carregando cavalo...
+        </LoadingState>
+      </Container>
+    );
+  }
+
   if (cavalo) {
     return (
       <Container>

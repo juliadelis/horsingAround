@@ -70,7 +70,26 @@ const Form = ({ initialData }) => {
   };
 
   const handleChange = (e) => {
-    setCavalo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+    if (name === "weight" || name === "foodamount") {
+      const sanitized = value.replace(/[^0-9.]/g, "");
+      const [integerPart, decimalPart] = sanitized.split(".");
+      const normalized = decimalPart !== undefined
+        ? `${integerPart || "0"}.${decimalPart.slice(0, 2)}`
+        : integerPart;
+
+      setCavalo((prev) => ({ ...prev, [name]: normalized }));
+      return;
+    }
+
+    if (name === "age") {
+      const sanitized = value.replace(/[^0-9]/g, "");
+      setCavalo((prev) => ({ ...prev, age: sanitized }));
+      return;
+    }
+
+    setCavalo((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleMedicationChange = (e) => {
@@ -162,7 +181,8 @@ const Form = ({ initialData }) => {
         <Label>Idade</Label>
         <Input
           value={cavalo.age}
-          type="text"
+          type="number"
+          min="0"
           onChange={handleChange}
           name="age"
         />
@@ -171,7 +191,9 @@ const Form = ({ initialData }) => {
         <Label>Ração</Label>
         <Input
           value={cavalo.foodamount}
-          type="text"
+          type="number"
+          min="0"
+          step="0.01"
           onChange={handleChange}
           name="foodamount"
         />
@@ -281,7 +303,9 @@ const Form = ({ initialData }) => {
         <Label>Peso</Label>
         <Input
           value={cavalo.weight}
-          type="text"
+          type="number"
+          min="0"
+          step="0.01"
           onChange={handleChange}
           name="weight"
         />

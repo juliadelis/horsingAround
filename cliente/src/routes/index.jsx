@@ -9,7 +9,7 @@ import Home from "../components/Home";
 import Layout from "../components/Layout";
 
 import Add from "../pages/Add";
-import Team from "../pages/Team";
+import Team from "../pages/Team/Team";
 import Organizations from "../pages/Organizations/Organizations";
 import Update from "../pages/Update";
 import Auth from "../pages/Auth/Auth";

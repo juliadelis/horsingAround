@@ -134,10 +134,15 @@ export const SubmitButton = styled.button`
   font-weight: 700;
   cursor: pointer;
   margin-top: 10px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 
   &:hover {
     background-color: #f1bf6c;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 

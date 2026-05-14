@@ -17,9 +17,23 @@ async function createMember(req, res) {
   try {
     const { organizationId } = req.params;
 
-    const member = await memberService.createMember(organizationId, req.body);
+    if (!req.body.password) {
+      return res.status(400).json({ error: "Senha do membro é obrigatória." });
+    }
 
-    return res.status(201).json(member);
+    const member = await memberService.createMember(
+      organizationId,
+      req.user.id,
+      req.body,
+    );
+
+    return res.status(201).json({
+      member,
+      credentials: {
+        email: req.body.email,
+        password: req.body.password,
+      },
+    });
   } catch (error) {
     console.error("Erro ao criar membro:", error);
     return res.status(500).json({ error: error.message });

@@ -143,10 +143,55 @@ export const Title = styled(NavLink)`
   }
 `;
 
+export const MenuAction = styled.button`
+  letter-spacing: 0.04em;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 24px;
+  line-height: 36px;
+  color: #afafa7;
+  align-items: center;
+  display: flex;
+  padding-bottom: 30px;
+  text-decoration: none;
+  transition: 0.3s;
+  gap: 15px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 400;
+    color: #afafa7;
+    font-size: 28px;
+  }
+
+  &:hover ${Iconsvg} {
+    background-color: #ffd08a;
+    padding: 5px;
+    color: #22211c;
+  }
+
+  @media only screen and (max-width: 768px) {
+    padding: 0 15px 10px;
+    font-size: 20px !important;
+    color: #afafa7 !important;
+    border-bottom: none;
+
+    &:hover {
+      font-size: 20px !important;
+    }
+
+    
+  }
+`;
+
 export const MenuItems = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  
   width: 100%;
 
   @media only screen and (max-width: 768px) {

@@ -14,6 +14,8 @@ import {
   Hipica,
   CardImg,
   DivImg,
+  LoadingState,
+  Spinner,
 } from "./style.js";
 import { useHorseData } from "../../hooks/useHorseData";
 import { organizationService } from "../../services/organizationService";
@@ -24,6 +26,7 @@ function Home() {
     useHorseData();
 
   const [organization, setOrganization] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadOrganization = async () => {
@@ -58,14 +61,23 @@ function Home() {
         setOrganization(data);
       } catch (error) {
         console.log("Erro ao buscar organização:", error);
+      } finally {
+        setLoading(false);
       }
     };
-
+    setLoading(true);
     loadOrganization();
   }, [slug]);
 
-  if (!organization) {
-    return <h2>Carregando organização...</h2>;
+  if (loading || !organization) {
+    return (
+      <Container>
+        <LoadingState>
+          <Spinner />
+          Carregando organização...
+        </LoadingState>
+      </Container>
+    );
   }
 
   return (

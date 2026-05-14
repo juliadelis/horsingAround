@@ -31,10 +31,16 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const signUp = async (email, password) => {
+  const signUp = async (email, password, metadata = {}) => {
     return await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          name: metadata.name || undefined,
+          phone: metadata.phone || undefined,
+        },
+      },
     });
   };
 

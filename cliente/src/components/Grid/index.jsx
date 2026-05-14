@@ -4,6 +4,8 @@ import {
   Card,
   Container,
   EmptyState,
+  LoadingState,
+  Spinner,
   Item,
   ItemNome,
   ItemBanco,
@@ -19,12 +21,16 @@ import { useParams } from "react-router-dom";
 const Grid = () => {
   const { slug } = useParams();
   const [cavalos, setCavalos] = useState([]);
+  const [loading, setLoading] = useState(false);
   const fetchAllCavalos = async () => {
+    setLoading(true);
     try {
       const data = await horseService.getAll();
       setCavalos(data);
     } catch (err) {
       console.log("Erro ao buscar cavalos:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,7 +40,12 @@ const Grid = () => {
 
   return (
     <Container>
-      {cavalos.length === 0 ? (
+      {loading ? (
+        <LoadingState>
+          <Spinner />
+          Carregando cavalos...
+        </LoadingState>
+      ) : cavalos.length === 0 ? (
         <EmptyState>
           <h2>Não há cavalos cadastrados nesta organização.</h2>
           <Botao to={`/${slug}/adicionar_cavalo`}>Adicionar Cavalo</Botao>

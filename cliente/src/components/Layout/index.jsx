@@ -1,5 +1,5 @@
-import { Outlet, useParams, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   ContainerMaior,
   Menu,
@@ -11,22 +11,42 @@ import {
   MenuItems,
   Logo,
   LogoContainer,
+  MenuAction,
 } from "./style";
-import { IoAddCircleOutline, IoMenu, IoClose } from "react-icons/io5";
+import { IoAddCircleOutline, IoMenu, IoClose, IoLogOutOutline } from "react-icons/io5";
 import { LiaHorseSolid } from "react-icons/lia";
 import { HiOutlineHome } from "react-icons/hi2";
 import { GoPeople } from "react-icons/go";
 import { TbHorseshoe } from "react-icons/tb";
 import logoIcon from "../../assets/icon.svg";
+import { organizationService } from "../../services/organizationService";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hasAnyOrganization, setHasAnyOrganization] = useState(false);
   const params = useParams();
   const selectedSlug = params.slug || localStorage.getItem("organizationSlug");
   const hasOrganization = Boolean(selectedSlug);
   const basePath = hasOrganization ? `/${selectedSlug}` : "/organizacoes";
 
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+
+  useEffect(() => {
+    const loadOrganizations = async () => {
+      try {
+        const organizations = await organizationService.getAll();
+        setHasAnyOrganization(organizations.length > 0);
+      } catch (error) {
+        console.error("Erro ao carregar organizações:", error);
+        setHasAnyOrganization(false);
+      }
+    };
+
+    loadOrganizations();
+  }, []);
 
 const isActive = (path, exact = false) => {
   if (exact) {
@@ -48,7 +68,7 @@ const isActive = (path, exact = false) => {
           </MobileToggle>
 
           <MenuItems open={menuOpen}>
-            {hasOrganization ? (
+            {hasOrganization && hasAnyOrganization ? (
               <>
                 <Title   to={basePath}  $active={isActive(basePath, true)} onClick={() => setMenuOpen(false)}>
                   <Iconsvg>
@@ -96,6 +116,25 @@ const isActive = (path, exact = false) => {
                 Organizações
               </Title>
             )}
+
+            <Linha />
+            <MenuAction type="button" onClick={async () => {
+              try {
+                await signOut();
+              } catch (error) {
+                console.error("Erro ao sair:", error);
+              } finally {
+                localStorage.removeItem("organizationId");
+                localStorage.removeItem("organizationName");
+                localStorage.removeItem("organizationSlug");
+                navigate("/login");
+              }
+            }}>
+              <Iconsvg>
+                <IoLogOutOutline size={38} />
+              </Iconsvg>
+              Sair
+            </MenuAction>
           </MenuItems>
         </Menu>
 

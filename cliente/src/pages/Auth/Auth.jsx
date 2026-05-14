@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 import {
   PageContainer,
   ImageSection,
@@ -27,6 +28,7 @@ const Auth = () => {
 
   const [isRegister, setIsRegister] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -61,19 +63,59 @@ const Auth = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const normalizePhoneForAuth = (phone) => {
+    const digits = phone.replace(/\D/g, "");
+    if (!digits) return undefined;
 
-    const response = isRegister
-      ? await signUp(form.email, form.password)
-      : await signIn(form.email, form.password);
-
-    if (response.error) {
-      alert(response.error.message);
-      return;
+    if (digits.startsWith("55") && digits.length >= 11) {
+      return `+${digits}`;
     }
 
-    navigate("/organizacoes");
+    if (digits.length === 10 || digits.length === 11) {
+      return `+55${digits}`;
+    }
+
+    return `+${digits}`;
+  };
+
+  const translateAuthError = (message) => {
+    if (!message) return "Erro ao realizar login.";
+
+    if (message === "missing email or phone") {
+      return "Falta email ou telefone";
+    }
+
+    if (message === "Invalid login credentials") {
+      return "Credenciais erradas";
+    }
+
+    return message;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = isRegister
+        ? await signUp(form.email, form.password, {
+            name: form.name,
+            phone: normalizePhoneForAuth(form.phone),
+          })
+        : await signIn(form.email, form.password);
+
+      if (response.error) {
+        toast.error(translateAuthError(response.error.message));
+        return;
+      }
+
+      navigate("/organizacoes");
+    } catch (error) {
+      console.error("Erro ao autenticar:", error);
+      toast.error(translateAuthError(error?.message));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleMode = () => {
@@ -136,8 +178,14 @@ const Auth = () => {
               />
             )}
 
-            <SubmitButton type="submit">
-              {isRegister ? "Cadastrar" : "Entrar"}
+            <SubmitButton type="submit" disabled={loading}>
+              {loading
+                ? isRegister
+                  ? "Cadastrando..."
+                  : "Entrando..."
+                : isRegister
+                ? "Cadastrar"
+                : "Entrar"}
             </SubmitButton>
           </form>
 

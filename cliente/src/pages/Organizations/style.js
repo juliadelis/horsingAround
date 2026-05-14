@@ -1,4 +1,10 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -133,4 +139,25 @@ display: flex;
 gap: 20px;
 flex-wrap: wrap;
 
+`;
+
+export const LoadingState = styled.div`
+  width: 100%;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: rgba(255, 208, 138, 0.9);
+  font-size: 1rem;
+`;
+
+export const Spinner = styled.div`
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #ffd08a;
+  border-radius: 50%;
+  animation: ${spin} 0.8s linear infinite;
 `;
