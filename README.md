@@ -6,23 +6,37 @@ Live project: https://horsing-around.vercel.app/
 
 ## Product Preview
 
+### Login
 
-| Area | Preview |
-| --- | --- |
-| Login | `docs/images/login.png` |
-| Register | `docs/images/register.png` |
-| Organization selection | `docs/images/organizations.png` |
-| Dashboard | `docs/images/dashboard.png` |
-| Horse list | `docs/images/horses.png` |
-| Horse profile | `docs/images/horse-profile.png` |
-| Horse Form | `docs/images/horse-form.png` |
-| Team management | `docs/images/team.png` |
+![Login screen](docs/images/login.png)
 
-```md
-![Authentication](docs/images/auth.png)
-![Dashboard](docs/images/dashboard.png)
-![Team management](docs/images/team.png)
-```
+### Registration
+
+![Registration screen](docs/images/register.png)
+
+### Organization Selection
+
+![Organization selection screen](docs/images/organizations.png)
+
+### Dashboard
+
+![Organization dashboard](docs/images/dashboard.png)
+
+### Horse List
+
+![Horse list screen](docs/images/horses.png)
+
+### Horse Profile
+
+![Horse profile screen](docs/images/horse-profile.png)
+
+### Horse Form
+
+![Horse form screen](docs/images/horse-form.png)
+
+### Team Management
+
+![Team management screen](docs/images/team.png)
 
 ## Overview
 
@@ -203,5 +217,4 @@ If the frontend environment file is used in your deployment, keep only public cl
 - Backend modules are organized by domain.
 - Member invitations are idempotent by organization email.
 - Loading and toast states are implemented across critical save and delete flows.
-
 
