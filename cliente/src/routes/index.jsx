@@ -42,6 +42,8 @@ const Router = () => {
             <Route path="equipe" element={<Team />} />
           </Route>
         </Route>
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
