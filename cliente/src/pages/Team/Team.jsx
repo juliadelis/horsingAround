@@ -3,6 +3,7 @@ import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { Dialog } from "primereact/dialog";
 import { memberService } from "../../services/memberService";
+import { useOrganizationRole } from "../../hooks/useOrganizationRole.jsx";
 import {
   dialogStyles,
   CancelButton,
@@ -48,6 +49,7 @@ const Team = () => {
   });
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const { canManageTeam } = useOrganizationRole();
 
   const organizationName =
     localStorage.getItem("organizationName") || "Organização";
@@ -266,9 +268,11 @@ const Team = () => {
           <Subtitle>{organizationName}</Subtitle>
         </div>
 
-        <AddButton type="button" onClick={openCreateDialog}>
-          <FiPlus size={18} /> Adicionar membro
-        </AddButton>
+        {canManageTeam && (
+          <AddButton type="button" onClick={openCreateDialog}>
+            <FiPlus size={18} /> Adicionar membro
+          </AddButton>
+        )}
       </Header>
 
       <Card>
@@ -287,7 +291,7 @@ const Team = () => {
                 <Th>Função</Th>
                 <Th>Email</Th>
                 <Th>Telefone</Th>
-                <Th style={{ textAlign: "right" }}>Ações</Th>
+                {canManageTeam && <Th style={{ textAlign: "right" }}>Ações</Th>}
               </tr>
             </thead>
             <tbody>
@@ -297,22 +301,24 @@ const Team = () => {
                   <Td>{roleOptions.find((role) => role.value === member.role)?.label ?? member.role}</Td>
                   <Td>{member.email}</Td>
                   <Td>{formatPhone(member.phone) || "-"}</Td>
-                  <Td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                    <ActionButton
-                      title="Editar"
-                      type="button"
-                      onClick={() => openEditDialog(member)}
-                      style={{ marginRight: "8px" }}
-                    >
-                      <FiEdit size={16} />
-                    </ActionButton>
-                    <ActionButton
-                      title="Remover"
-                      type="button"
-                      onClick={() => handleDelete(member)}>
-                      <FiTrash2 size={16} />
-                    </ActionButton>
-                  </Td>
+                  {canManageTeam && (
+                    <Td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                      <ActionButton
+                        title="Editar"
+                        type="button"
+                        onClick={() => openEditDialog(member)}
+                        style={{ marginRight: "8px" }}
+                      >
+                        <FiEdit size={16} />
+                      </ActionButton>
+                      <ActionButton
+                        title="Remover"
+                        type="button"
+                        onClick={() => handleDelete(member)}>
+                        <FiTrash2 size={16} />
+                      </ActionButton>
+                    </Td>
+                  )}
                 </tr>
               ))}
             </tbody>

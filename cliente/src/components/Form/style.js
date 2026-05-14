@@ -43,6 +43,12 @@ export const Input = styled.input`
   border-left: none;
   background: transparent;
   height: 40px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
   @media only screen and (max-width: 500px) {
     width: 270px;
   }
@@ -216,6 +222,11 @@ export const Option = styled.select`
   border-left: none;
   background: transparent;
   height: 40px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
 
   option {
     color: white;

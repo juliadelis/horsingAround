@@ -21,6 +21,7 @@ import { TbHorseshoe } from "react-icons/tb";
 import logoIcon from "../../assets/icon.svg";
 import { organizationService } from "../../services/organizationService";
 import { useAuth } from "../../contexts/AuthContext";
+import { useOrganizationRole } from "../../hooks/useOrganizationRole";
 
 function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,6 +34,7 @@ function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { canAddHorse } = useOrganizationRole();
 
   useEffect(() => {
     const loadOrganizations = async () => {
@@ -84,16 +86,20 @@ const isActive = (path, exact = false) => {
                   Cavalos
                 </Title>
                 <Linha />
-                <Title
-                  to={`${basePath}/adicionar_cavalo`}
-                  $active={isActive(`${basePath}/adicionar_cavalo`)}
-                  onClick={() => setMenuOpen(false)}>
-                  <Iconsvg>
-                    <IoAddCircleOutline size={38} />
-                  </Iconsvg>
-                  Adicionar Cavalo
-                </Title>
-                <Linha />
+                {canAddHorse && (
+                  <>
+                    <Title
+                      to={`${basePath}/adicionar_cavalo`}
+                      $active={isActive(`${basePath}/adicionar_cavalo`)}
+                      onClick={() => setMenuOpen(false)}>
+                      <Iconsvg>
+                        <IoAddCircleOutline size={38} />
+                      </Iconsvg>
+                      Adicionar Cavalo
+                    </Title>
+                    <Linha />
+                  </>
+                )}
                 <Title to="/organizacoes" $active={isActive(`/organizacoes`)} onClick={() => setMenuOpen(false)}>
                   <Iconsvg>
                     <TbHorseshoe size={38} />

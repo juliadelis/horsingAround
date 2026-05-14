@@ -72,11 +72,33 @@ async function createHorse(organizationId, data, fotoUrl) {
   return horse[0];
 }
 
-async function updateHorse(organizationId, id, data, fotoUrl) {
+async function updateHorse(organizationId, id, data, fotoUrl, role = "admin") {
   const medicationTypeValue =
     String(data.medication).toLowerCase() === "false"
       ? null
       : data.medicationtype || null;
+
+  if (role === "veterinarian") {
+    const horse = await db`
+      UPDATE horses
+      SET
+        age = ${data.age},
+        foodamount = ${data.foodamount},
+        gender = ${data.gender},
+        hay = ${data.hay},
+        medication = ${data.medication},
+        medicationtype = ${medicationTypeValue},
+        fathersname = ${data.fathersname},
+        mothersname = ${data.mothersname},
+        weight = ${data.weight},
+        updated_at = now()
+      WHERE id = ${id}
+      AND organization_id = ${organizationId}
+      RETURNING *
+    `;
+
+    return horse[0];
+  }
 
   let horse;
 

@@ -18,10 +18,12 @@ import {
 import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useOrganizationRole } from "../../hooks/useOrganizationRole.jsx";
 const Grid = () => {
   const { slug } = useParams();
   const [cavalos, setCavalos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { canAddHorse } = useOrganizationRole();
   const fetchAllCavalos = async () => {
     setLoading(true);
     try {
@@ -48,7 +50,9 @@ const Grid = () => {
       ) : cavalos.length === 0 ? (
         <EmptyState>
           <h2>Não há cavalos cadastrados nesta organização.</h2>
-          <Botao to={`/${slug}/adicionar_cavalo`}>Adicionar Cavalo</Botao>
+          {canAddHorse && (
+            <Botao to={`/${slug}/adicionar_cavalo`}>Adicionar Cavalo</Botao>
+          )}
         </EmptyState>
       ) : (
         cavalos.map((cavalos) => (

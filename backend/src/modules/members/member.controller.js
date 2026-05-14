@@ -1,8 +1,13 @@
 const memberService = require("./member.service");
+const {
+  requireOrganizationRole,
+} = require("../permissions/organizationPermissions");
 
 async function getMembers(req, res) {
   try {
     const { organizationId } = req.params;
+    const member = await requireOrganizationRole(req, res);
+    if (!member) return;
 
     const members = await memberService.getMembers(organizationId);
 
@@ -16,6 +21,8 @@ async function getMembers(req, res) {
 async function createMember(req, res) {
   try {
     const { organizationId } = req.params;
+    const currentMember = await requireOrganizationRole(req, res, ["admin"]);
+    if (!currentMember) return;
 
     if (!req.body.email) {
       return res.status(400).json({ error: "E-mail do membro é obrigatório." });
@@ -37,6 +44,8 @@ async function createMember(req, res) {
 async function updateMember(req, res) {
   try {
     const { organizationId, memberId } = req.params;
+    const currentMember = await requireOrganizationRole(req, res, ["admin"]);
+    if (!currentMember) return;
 
     const member = await memberService.updateMember(
       organizationId,
@@ -54,6 +63,8 @@ async function updateMember(req, res) {
 async function deleteMember(req, res) {
   try {
     const { organizationId, memberId } = req.params;
+    const currentMember = await requireOrganizationRole(req, res, ["admin"]);
+    if (!currentMember) return;
 
     await memberService.deleteMember(organizationId, memberId);
 

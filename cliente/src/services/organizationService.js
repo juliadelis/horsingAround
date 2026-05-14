@@ -11,6 +11,11 @@ export const organizationService = {
     return response.data;
   },
 
+  getMyRole: async (id) => {
+    const response = await api.get(`/organizations/${id}/my-role`);
+    return response.data;
+  },
+
   getBySlug: async (slug) => {
     const response = await api.get("/organizations");
     return response.data.find((organization) => organization.slug === slug);

@@ -24,6 +24,22 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BiTrash } from "react-icons/bi";
 import { horseService } from "../../services/horseService";
 import { toast } from "react-toastify";
+import { useOrganizationRole } from "../../hooks/useOrganizationRole.jsx";
+
+const veterinarianEditableFields = new Set([
+  "age",
+  "foodamount",
+  "gender",
+  "hay",
+  "medication",
+  "medicationtype",
+  "fathersname",
+  "mothersname",
+  "weight",
+  "breed"
+]);
+
+
 
 const Form = ({ initialData }) => {
   const ref = useRef();
@@ -31,6 +47,12 @@ const Form = ({ initialData }) => {
   const { slug } = useParams();
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [saving, setSaving] = useState(false);
+  const {
+    roleLoading,
+    canAddHorse,
+    canEditHorse,
+    isVeterinarian,
+  } = useOrganizationRole();
   const [cavalo, setCavalo] = useState(
     initialData
       ? initialData
@@ -168,6 +190,7 @@ const Form = ({ initialData }) => {
       console.log("Erro ao salvar cavalo:", err);
       toast.error(
         err?.response?.data?.message ||
+          err?.response?.data?.error ||
           err?.message ||
           "Não foi possível salvar o cavalo.",
       );
@@ -178,6 +201,30 @@ const Form = ({ initialData }) => {
 
   const isMedicationTrue =
     cavalo?.medication === "true" || cavalo?.medication === true;
+
+  const isFieldDisabled = (fieldName) =>
+    isVeterinarian &&
+    Boolean(initialData) &&
+    !veterinarianEditableFields.has(fieldName);
+
+  if (roleLoading) {
+    return (
+      <FormContainer ref={ref}>
+        <LoadingState>
+          <Spinner />
+          Carregando permissões...
+        </LoadingState>
+      </FormContainer>
+    );
+  }
+
+  if (!initialData && !canAddHorse) {
+    return <h2>Você não tem permissão para adicionar cavalos.</h2>;
+  }
+
+  if (initialData && !canEditHorse) {
+    return <h2>Você não tem permissão para editar cavalos.</h2>;
+  }
 
   if (saving) {
     return (
@@ -199,6 +246,7 @@ const Form = ({ initialData }) => {
           type="text"
           onChange={handleChange}
           name="name"
+          disabled={isFieldDisabled("name")}
         />
       </InputArea>
       <InputArea>
@@ -208,6 +256,7 @@ const Form = ({ initialData }) => {
           type="text"
           onChange={handleChange}
           name="owner"
+          disabled={isFieldDisabled("owner")}
         />
       </InputArea>
       <InputArea>
@@ -218,6 +267,7 @@ const Form = ({ initialData }) => {
           min="0"
           onChange={handleChange}
           name="age"
+          disabled={isFieldDisabled("age")}
         />
       </InputArea>
       <InputArea>
@@ -230,6 +280,7 @@ const Form = ({ initialData }) => {
             step="0.01"
             onChange={handleChange}
             name="foodamount"
+            disabled={isFieldDisabled("foodamount")}
           />
           <InputSuffix>Kg</InputSuffix>
         </InputWithSuffix>
@@ -240,7 +291,8 @@ const Form = ({ initialData }) => {
           value={cavalo.gender}
           type="text"
           onChange={handleChange}
-          name="gender">
+          name="gender"
+          disabled={isFieldDisabled("gender")}>
           <option value="-" hidden>
             -
           </option>
@@ -255,6 +307,7 @@ const Form = ({ initialData }) => {
           type="text"
           onChange={handleChange}
           name="breed"
+          disabled={isFieldDisabled("breed")}
         />
       </InputArea>
       <InputArea>
@@ -263,7 +316,8 @@ const Form = ({ initialData }) => {
           value={cavalo.hay}
           type="text"
           onChange={handleChange}
-          name="hay">
+          name="hay"
+          disabled={isFieldDisabled("hay")}>
           <option value="-" hidden>
             -
           </option>
@@ -277,7 +331,8 @@ const Form = ({ initialData }) => {
           type="text"
           value={cavalo.medication}
           onChange={handleMedicationChange}
-          name="medication">
+          name="medication"
+          disabled={isFieldDisabled("medication")}>
           <option value="-" hidden>
             -
           </option>
@@ -294,6 +349,7 @@ const Form = ({ initialData }) => {
             type="text"
             onChange={handleChange}
             name="medicationtype"
+            disabled={isFieldDisabled("medicationtype")}
           />
         </InputArea>
       )}
@@ -303,7 +359,8 @@ const Form = ({ initialData }) => {
           value={cavalo.lessons}
           type="text"
           onChange={handleChange}
-          name="lessons">
+          name="lessons"
+          disabled={isFieldDisabled("lessons")}>
           <option value="-" hidden>
             -
           </option>
@@ -324,6 +381,7 @@ const Form = ({ initialData }) => {
           type="text"
           onChange={handleChange}
           name="fathersname"
+          disabled={isFieldDisabled("fathersname")}
         />
       </InputArea>
       <InputArea>
@@ -333,6 +391,7 @@ const Form = ({ initialData }) => {
           type="text"
           onChange={handleChange}
           name="mothersname"
+          disabled={isFieldDisabled("mothersname")}
         />
       </InputArea>
       <InputArea>
@@ -345,36 +404,39 @@ const Form = ({ initialData }) => {
             step="0.01"
             onChange={handleChange}
             name="weight"
+            disabled={isFieldDisabled("weight")}
           />
           <InputSuffix>Kg</InputSuffix>
         </InputWithSuffix>
       </InputArea>
-      <InputArea>
-        <Label>Foto</Label>
-        <FileInputWrapper>
-          <FileInputLabel htmlFor="file-input">Escolher arquivo</FileInputLabel>
-          <InputFoto
-            id="file-input"
-            type="file"
-            accept=".png, .jpg, .jpeg, .webp"
-            onChange={handleFileSelect}
-            name="foto"
-          />
-          {selectedFile && (
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <FileName>{selectedFile.name}</FileName>
-              <DeleteButton type="button" onClick={handleDeleteSelection}>
-                <BiTrash size={20} />
-              </DeleteButton>
-            </div>
-          )}
-          {cavalo.pictureurl && (
-            <ImagePreview>
-              <PreviewImage src={cavalo.pictureurl} alt="Preview da foto" />
-            </ImagePreview>
-          )}
-        </FileInputWrapper>
-      </InputArea>
+      {!isVeterinarian && (
+        <InputArea>
+          <Label>Foto</Label>
+          <FileInputWrapper>
+            <FileInputLabel htmlFor="file-input">Escolher arquivo</FileInputLabel>
+            <InputFoto
+              id="file-input"
+              type="file"
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileSelect}
+              name="foto"
+            />
+            {selectedFile && (
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                <FileName>{selectedFile.name}</FileName>
+                <DeleteButton type="button" onClick={handleDeleteSelection}>
+                  <BiTrash size={20} />
+                </DeleteButton>
+              </div>
+            )}
+            {cavalo.pictureurl && (
+              <ImagePreview>
+                <PreviewImage src={cavalo.pictureurl} alt="Preview da foto" />
+              </ImagePreview>
+            )}
+          </FileInputWrapper>
+        </InputArea>
+      )}
       <ButtonContainer>
         <Button type="submit" disabled={saving}>
           SALVAR

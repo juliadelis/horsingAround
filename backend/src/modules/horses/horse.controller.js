@@ -1,8 +1,16 @@
 const horseService = require("./horse.service");
+const {
+  requireOrganizationRole,
+} = require("../permissions/organizationPermissions");
+
+const HORSE_CREATE_ROLES = ["admin", "caretaker", "trainer"];
+const HORSE_UPDATE_ROLES = ["admin", "caretaker", "trainer", "veterinarian"];
 
 async function getAllHorses(req, res) {
   try {
     const { organizationId } = req.params;
+    const member = await requireOrganizationRole(req, res);
+    if (!member) return;
 
     const horses = await horseService.getAllHorses(organizationId);
 
@@ -16,6 +24,8 @@ async function getAllHorses(req, res) {
 async function getHorseById(req, res) {
   try {
     const { organizationId, id } = req.params;
+    const member = await requireOrganizationRole(req, res);
+    if (!member) return;
 
     const horse = await horseService.getHorseById(organizationId, id);
 
@@ -29,6 +39,9 @@ async function getHorseById(req, res) {
 async function createHorse(req, res) {
   try {
     const { organizationId } = req.params;
+    const member = await requireOrganizationRole(req, res, HORSE_CREATE_ROLES);
+    if (!member) return;
+
     const fotoUrl = req.file?.secure_url || req.file?.path || null;
 
     const horse = await horseService.createHorse(
@@ -47,6 +60,9 @@ async function createHorse(req, res) {
 async function updateHorse(req, res) {
   try {
     const { organizationId, id } = req.params;
+    const member = await requireOrganizationRole(req, res, HORSE_UPDATE_ROLES);
+    if (!member) return;
+
     const fotoUrl = req.file?.secure_url || req.file?.path || null;
 
     const horse = await horseService.updateHorse(
@@ -54,6 +70,7 @@ async function updateHorse(req, res) {
       id,
       req.body,
       fotoUrl,
+      member.role,
     );
 
     return res.status(200).json(horse);
@@ -66,6 +83,8 @@ async function updateHorse(req, res) {
 async function deleteHorse(req, res) {
   try {
     const { organizationId, id } = req.params;
+    const member = await requireOrganizationRole(req, res, ["admin"]);
+    if (!member) return;
 
     await horseService.deleteHorse(organizationId, id);
 
