@@ -54,6 +54,7 @@ The current product supports multi-organization access, authenticated private ro
 - Horse detail view with edit and delete actions.
 - Dashboard with organization context, male and female counts, medicated horses, and most-used riding school horse.
 - Team management by authorized email, without manually creating passwords for members.
+- Role-based permissions per organization for admins, caretakers, trainers, and veterinarians.
 - Email invitation flow for members:
   - Existing users receive a login-oriented invite.
   - New users receive a registration-oriented invite.
@@ -62,6 +63,31 @@ The current product supports multi-organization access, authenticated private ro
 - Toast feedback for success and error states.
 - Submit and delete loading states for horse and team workflows.
 - SPA fallback configuration for direct route access on Vercel.
+
+## Role-Based Permissions
+
+Permissions are scoped per organization and enforced on the backend. The frontend also reflects the current role by hiding unavailable actions and disabling restricted fields.
+
+| Role | Horse access | Team access |
+| --- | --- | --- |
+| Admin | Full access: view, create, edit, and delete horses | Full access: view, invite, edit, and remove members |
+| Caretaker | View, create, and edit horses | View team members only |
+| Trainer | View, create, and edit horses | View team members only |
+| Veterinarian | View horses and edit only clinical/technical fields | View team members only |
+
+Veterinarian horse editing is limited to:
+
+- Medication status
+- Treatment details
+- Food amount
+- Age
+- Hay usage
+- Weight
+- Gender
+- Father name
+- Mother name
+
+This prevents sensitive organization and team operations from being available to non-admin roles while still allowing each role to update the operational data they are responsible for.
 
 ## Tech Stack
 
@@ -115,6 +141,7 @@ backend/
       horses/         Horse CRUD and photo upload
       organizations/  Organization access and creation
       members/        Team authorization and invitation flow
+      permissions/    Organization role authorization helpers
 ```
 
 ## Member Invitation Flow
@@ -141,6 +168,7 @@ POST   /auth/login
 GET    /organizations
 POST   /organizations
 GET    /organizations/:id
+GET    /organizations/:id/my-role
 
 GET    /organizations/:organizationId/cavalos
 GET    /organizations/:organizationId/cavalos/:id
