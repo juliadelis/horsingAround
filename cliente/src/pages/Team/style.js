@@ -15,7 +15,6 @@ export const PageContainer = styled.div`
   background-color: #333129;
   border-radius: 25px;
   width: 100%;
-  margin: 30px;
   justify-content: space-between;
 
   @media (max-width: 768px) {

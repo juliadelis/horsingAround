@@ -35,7 +35,7 @@ export const Container = styled.div`
   border-radius: 25px;
   width: 100%;
   height: 100%;
-  margin: 30px;
+  
   justify-content: space-between;
   @media only screen and (max-width: 768px) {
     margin-bottom: 0;

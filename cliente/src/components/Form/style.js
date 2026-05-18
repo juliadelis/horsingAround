@@ -15,6 +15,7 @@ export const FormContainer = styled.form`
   padding: 55px;
   border-radius: 25px;
   width: 100%;
+  height: 100%;
 
   &:after {
     content: "";
@@ -193,7 +194,7 @@ export const ButtonContainer = styled.div`
 
 export const LoadingState = styled.div`
   width: 100%;
-  min-height: 220px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

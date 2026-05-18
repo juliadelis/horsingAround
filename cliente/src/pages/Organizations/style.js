@@ -14,7 +14,6 @@ export const Container = styled.div`
   background-color: #333129;
   border-radius: 25px;
   width: 100%;
-  margin: 30px;
 
   gap: 30px;
   @media only screen and (max-width: 768px) {
