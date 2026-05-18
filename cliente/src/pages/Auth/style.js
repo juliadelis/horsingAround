@@ -3,8 +3,8 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
   min-height: 100vh;
   display: flex;
-  background-color: #18150f;
-  color: #fff;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark-bg);
 
   @media only screen and (max-width: 900px) {
     flex-direction: column;
@@ -32,7 +32,7 @@ export const FormSection = styled.div`
   align-items: center;
   justify-content: center;
  
-  background-color: #22211c;
+  background-color: var(--color-bg-dark);
 
   @media only screen and (max-width: 900px) {
     padding: 32px 20px;
@@ -64,7 +64,7 @@ export const Brand = styled.h1`
   font-size: 40px;
   line-height: 1.1;
   margin: 0 0 40px;
-  color: #ffd08a;
+  color: var(--color-accent);
   letter-spacing: -0.03em;
   justify-self: center;
 
@@ -77,7 +77,7 @@ export const Brand = styled.h1`
 export const FormTitle = styled.h2`
   font-size: 24px;
   margin: 0 0 30px;
-  color: #fff;
+  color: var(--color-text-dark-bg);
   font-weight: 500;
   
 `;
@@ -88,7 +88,7 @@ export const Input = styled.input`
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.06);
-  color: #f4f0e9;
+  color: var(--color-text-dark-bg);
   font-size: 16px;
   margin-bottom: 18px;
 
@@ -123,17 +123,18 @@ export const TogglePassword = styled.button`
   padding: 6px;
 
   &:hover {
-    color: #ffd08a;
+    color: var(--color-accent);
   }
 `;
 
 export const SubmitButton = styled.button`
   width: 100%;
-  background-color: #ffd08a;
-  color: #22211c;
+  min-height: 44px;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
   border: none;
   border-radius: 14px;
-  padding: 16px;
+  padding: 12px 18px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -141,7 +142,7 @@ export const SubmitButton = styled.button`
   transition: background-color 0.2s ease, opacity 0.2s ease;
 
   &:hover {
-    background-color: #f1bf6c;
+    background-color: var(--color-accent);
   }
 
   &:disabled {
@@ -158,7 +159,7 @@ export const FooterText = styled.p`
 `;
 
 export const SwitchLink = styled.span`
-  color: #ffd08a;
+  color: var(--color-accent);
   font-weight: 700;
   cursor: pointer;
   margin-left: 6px;

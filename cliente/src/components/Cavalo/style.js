@@ -11,7 +11,7 @@ const spin = keyframes`
 export const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
-  background-color: #333129;
+  background-color: var(--color-bg-submenu);
   border-radius: 28px;
   width: 100%;
   height: 80vh;
@@ -25,7 +25,7 @@ export const Container = styled.div`
 `;
 
 export const Card = styled.div`
-  background-color: #afafa7;
+  background-color: var(--color-card);
   width: 80vw;
 
   border-radius: 25px;
@@ -61,7 +61,7 @@ export const ItemNome = styled.div`
   font-weight: 700;
   font-size: 24px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
   width: 100%;
   padding-bottom: 10px;
@@ -72,7 +72,7 @@ export const Item = styled.div`
   letter-spacing: 0.04em;
   font-size: 18px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
 `;
 export const Botoes = styled.div`
@@ -100,7 +100,7 @@ export const ItemBanco = styled.div`
   letter-spacing: 0.04em;
   font-size: 18px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
 `;
 
@@ -126,7 +126,7 @@ export const LoadingState = styled.div`
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-dark-bg);
   font-size: 1rem;
 `;
 
@@ -134,7 +134,7 @@ export const Spinner = styled.div`
   width: 48px;
   height: 48px;
   border: 5px solid rgba(255, 255, 255, 0.18);
-  border-top-color: #ffd08a;
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
 `;
@@ -148,16 +148,17 @@ export const Botao = styled(Link)`
   cursor: pointer;
   border-radius: 155px;
   border: none;
-  background-color: #ffd08a;
-  color: #22211c;
-  font-weight: 600;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: 0.12em;
   transition: 0.5s;
   position: absolute;
   right: 20%;
   top: 7%;
   &:hover {
-    background-color: #f1b356;
+    background-color: var(--color-accent);
     transition: 0.5s;
   }
 
@@ -171,7 +172,7 @@ export const Botao = styled(Link)`
 
 export const Svg = styled(Icon)`
    {
-    stroke: #22211c;
+    stroke: var(--color-bg-dark);
     stroke-width: 3px;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -183,7 +184,7 @@ export const Svg = styled(Icon)`
 
 export const SvgTrash = styled(Icon)`
    {
-    stroke: #22211c;
+    stroke: var(--color-bg-dark);
     stroke-width: 3px;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -196,17 +197,22 @@ export const SvgTrash = styled(Icon)`
 export const Deletar = styled.button`
   height: 50px;
   width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   border-radius: 155px;
   border: none;
-  background-color: #ffd08a;
-  color: #22211c;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
+  font-size: 16px;
+  font-weight: 700;
   transition: 0.5s;
   position: absolute;
   right: 8%;
   top: 7%;
   &:hover {
-    background-color: #f1b356;
+    background-color: var(--color-accent);
     transition: 0.5s;
   }
 
@@ -224,16 +230,17 @@ export const Voltar = styled(Link)`
   cursor: pointer;
   border-radius: 155px;
   border: none;
-  background-color: #ffd08a;
-  color: #22211c;
-  font-weight: 600;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: 0.12em;
   transition: 0.5s;
   position: absolute;
   right: 88%;
   top: 7%;
   &:hover {
-    background-color: #f1b356;
+    background-color: var(--color-accent);
     transition: 0.5s;
   }
 

@@ -439,7 +439,7 @@ const Form = ({ initialData }) => {
       )}
       <ButtonContainer>
         <Button type="submit" disabled={saving}>
-          SALVAR
+          Salvar
         </Button>
       </ButtonContainer>
     </FormContainer>

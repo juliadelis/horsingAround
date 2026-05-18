@@ -31,7 +31,7 @@ export const Container = styled.div`
   display: flex;
   gap: 5%;
 
-  background-color: #333129;
+  background-color: var(--color-bg-submenu);
   border-radius: 25px;
   width: 100%;
   height: 100%;
@@ -55,7 +55,7 @@ export const Container = styled.div`
 `;
 
 export const Card = styled.div`
-  background-color: #afafa7;
+  background-color: var(--color-card);
 
   border-radius: 25px;
   margin: 40px 0px;
@@ -68,7 +68,7 @@ export const Card = styled.div`
 `;
 
 export const CardImg = styled.div`
-  background-color: #afafa7;
+  background-color: var(--color-card);
   width: 100%;
   border-radius: 25px;
   margin: 40px 0px;
@@ -89,7 +89,7 @@ export const ItemNome = styled.div`
   font-weight: 700;
   font-size: 24px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
   width: 100%;
   padding-bottom: 10px;
@@ -100,7 +100,7 @@ export const Item = styled.div`
   letter-spacing: 0.04em;
   font-size: 18px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
   margin-right: 5px;
 `;
@@ -116,7 +116,7 @@ export const ItemBanco = styled.div`
   letter-spacing: 0.04em;
   font-size: 18px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
   margin-right: 30px;
 `;
@@ -144,7 +144,7 @@ export const Container_E = styled.div`
 
 export const DivImg = styled.div`
   width: 45%;
-  background-color: black;
+  background-color: var(--color-bg-dark);
   border-radius: 25px;
   align-items: center;
   display: flex;
@@ -176,7 +176,7 @@ export const Hipica = styled.h2`
   font-weight: 600;
   font-size: 30px;
   line-height: 36px;
-  color: #ffd08a;
+  color: var(--color-accent);
   margin-top: 20px;
 `;
 
@@ -234,7 +234,7 @@ export const LoadingState = styled.div`
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-dark-bg);
   font-size: 1rem;
 `;
 
@@ -242,7 +242,7 @@ export const Spinner = styled.div`
   width: 48px;
   height: 48px;
   border: 5px solid rgba(255, 255, 255, 0.18);
-  border-top-color: #ffd08a;
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
 `;

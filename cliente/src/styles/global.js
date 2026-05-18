@@ -9,6 +9,14 @@ const Global = createGlobalStyle`
         box-sizing: border-box;
     }
 
+    :root {
+        --color-accent: #FFD08A;
+        --color-bg-dark: #22211C;
+        --color-bg-submenu: #333129;
+        --color-card: #AFAFA7;
+        --color-text-dark-bg: #CDCCC8;
+    }
+
     html, body, #root{
         width: 100%;
         min-height: 100%;
@@ -16,7 +24,8 @@ const Global = createGlobalStyle`
 
     body{
         min-height: 100vh;
-        background-color: #22211C;
+        background-color: var(--color-bg-dark);
+        color: var(--color-text-dark-bg);
         overflow-x: hidden;
     }
     `;

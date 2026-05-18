@@ -32,7 +32,7 @@ export const Container = styled.div`
   display: flex;
   gap: 5vh;
   flex-wrap: wrap;
-  background-color: #333129;
+  background-color: var(--color-bg-submenu);
   padding: 55px;
   border-radius: 25px;
   width: 100%;
@@ -54,7 +54,7 @@ export const Container = styled.div`
 `;
 
 export const Card = styled.div`
-  background-color: #afafa7;
+  background-color: var(--color-card);
   width: 45%;
   border-radius: 25px;
   padding-bottom: 30px;
@@ -84,7 +84,7 @@ export const ItemNome = styled.div`
   font-weight: 700;
   font-size: 24px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
   width: 100%;
   padding-bottom: 10px;
@@ -95,7 +95,7 @@ export const Item = styled.div`
   letter-spacing: 0.04em;
   font-size: 18px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
   text-transform: capitalize;
 `;
 
@@ -121,7 +121,7 @@ export const ItemBanco = styled.div`
   letter-spacing: 0.04em;
   font-size: 18px;
   line-height: 36px;
-  color: #22211c;
+  color: var(--color-bg-dark);
 `;
 
 export const ItemId = styled.div``;
@@ -136,23 +136,24 @@ export const Img = styled.img`
 `;
 
 export const Botao = styled(Link)`
-  padding: 10px 18px;
+  min-height: 44px;
+  padding: 12px 18px;
   cursor: pointer;
   border-radius: 8px;
   border: none;
-  background-color: #ffd08a;
-  color: #22211c;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  margin-left: 20px;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
+  font-size: 16px;
+  font-weight: 700;
+  gap: 8px;
   transition: 0.3s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
+margin-left: 20px;
   &:hover {
-    box-shadow: 8px 13px 42.8px #ffd08a40;
+    box-shadow: 8px 13px 42.8px rgba(255, 208, 138, 0.25);
   }
 `;
 
@@ -167,7 +168,7 @@ export const EmptyState = styled.div`
   border-radius: 25px;
   h2 {
     font-size: 24px;
-    color: white;
+    color: var(--color-text-dark-bg);
     margin: 0;
   }
 `;
@@ -207,7 +208,7 @@ export const LoadingState = styled.div`
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-dark-bg);
   font-size: 1rem;
 `;
 
@@ -215,7 +216,7 @@ export const Spinner = styled.div`
   width: 48px;
   height: 48px;
   border: 5px solid rgba(255, 255, 255, 0.18);
-  border-top-color: #ffd08a;
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
 `;

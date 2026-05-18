@@ -11,7 +11,7 @@ export const FormContainer = styled.form`
   align-items: flex-start;
   gap: 50px;
   flex-wrap: wrap;
-  background-color: #333129;
+  background-color: var(--color-bg-submenu);
   padding: 55px;
   border-radius: 25px;
   width: 100%;
@@ -37,7 +37,7 @@ export const InputArea = styled.div`
 export const Input = styled.input`
   width: 170px;
   padding: 0 10px;
-  border-bottom: 3px solid #ffd08a;
+  border-bottom: 3px solid var(--color-accent);
   border-radius: 4px;
   border-right: none;
   border-top: none;
@@ -81,41 +81,33 @@ export const InputSuffix = styled.span`
 export const Label = styled.label``;
 
 export const Button = styled.button`
-  padding: 10px;
+  color: var(--color-bg-dark);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent);
+  gap: 8px;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
   border: none;
-  background-color: #ffd08a;
-  color: #22211c;
-  height: 42px;
-  width: 180px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
   transition: all 0.3s;
-  border: 1px solid #ffd08a;
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.7;
-  }
-
-  @media only screen and (max-width: 800px) {
-    margin-left: 17vw;
-  }
-  @media only screen and (max-width: 500px) {
-    width: 250px;
-    margin-left: 17vw;
+    box-shadow: none;
   }
 
   &:hover {
-    background-color: #22211c;
-    border: 1px solid #ffd08a;
-    color: #ffd08a;
+    box-shadow: 8px 13px 42.8px rgba(255, 208, 138, 0.25);
   }
 
   &:disabled:hover {
-    background-color: #ffd08a;
-    color: #22211c;
+    box-shadow: none;
   }
 `;
 
@@ -136,26 +128,29 @@ export const FileInputWrapper = styled.div`
 `;
 
 export const FileInputLabel = styled.label`
-  padding: 5px 10px;
-  background-color: #ffd08a;
+  min-height: 44px;
+  padding: 12px 18px;
+  background-color: var(--color-accent);
   margin-top: 5px;
-  color: #22211c;
-  border-radius: 5px;
-  font-size: 14px;
+  color: var(--color-bg-dark);
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.3s;
-  border: 1px solid #ffd08a;
+  border: none;
 
   &:hover {
-    background-color: #22211c;
-    border: 1px solid #ffd08a;
-    color: #ffd08a;
+    box-shadow: 8px 13px 42.8px rgba(255, 208, 138, 0.25);
   }
 `;
 
 export const FileName = styled.p`
-  color: #ffd08a;
+  color: var(--color-accent);
   font-size: 14px;
   margin: 0;
   max-width: 240px;
@@ -173,23 +168,27 @@ export const PreviewImage = styled.img`
   max-width: 200px;
   max-height: 200px;
   border-radius: 8px;
-  border: 2px solid #ffd08a;
+  border: 2px solid var(--color-accent);
 `;
 
 export const DeleteButton = styled.button`
-  padding: 5px 10px;
+  min-height: 44px;
+  padding: 12px 18px;
   background-color: transparent;
-  color: white;
+  color: var(--color-text-dark-bg);
   border: none;
   border-radius: 5px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
 `;
 
 export const ButtonContainer = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 export const LoadingState = styled.div`
@@ -200,7 +199,7 @@ export const LoadingState = styled.div`
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-dark-bg);
   font-size: 1rem;
 `;
 
@@ -208,7 +207,7 @@ export const Spinner = styled.div`
   width: 48px;
   height: 48px;
   border: 5px solid rgba(255, 255, 255, 0.18);
-  border-top-color: #ffd08a;
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
 `;
@@ -216,7 +215,7 @@ export const Spinner = styled.div`
 export const Option = styled.select`
   width: 170px;
   padding: 0 10px;
-  border-bottom: 3px solid #ffd08a;
+  border-bottom: 3px solid var(--color-accent);
   border-radius: 4px;
   border-right: none;
   border-top: none;
@@ -230,8 +229,8 @@ export const Option = styled.select`
   }
 
   option {
-    color: white;
-    background: #333129;
+    color: var(--color-text-dark-bg);
+    background: var(--color-bg-submenu);
     font-weight: small;
     display: flex;
     white-space: pre;

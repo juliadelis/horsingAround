@@ -26,7 +26,7 @@ export const Menu = styled.nav`
   min-width: 220px;
   max-width: 280px;
   padding-left: 2%;
-  background-color: #22211c;
+  background-color: var(--color-bg-dark);
 
   @media only screen and (max-width: 768px) {
     flex-direction: column;
@@ -72,9 +72,9 @@ export const Iconsvg = styled.div`
   transition: 0.5s;
   display: flex;
   &:hover {
-    background-color: #ffd08a;
+    background-color: var(--color-accent);
     padding: 5px;
-    color: #22211c;
+    color: var(--color-bg-dark);
     transition: 0.3s;
   }
 
@@ -91,7 +91,7 @@ export const Title = styled(NavLink)`
   font-weight: ${({ $active }) => ($active ? "400" : "200")};
   font-size: ${({ $active }) => ($active ? "28px" : "24px")};
   line-height: 36px;
-  color: #afafa7;
+  color: var(--color-card);
   align-items: center;
   display: flex;
   padding-bottom: 20px;
@@ -101,7 +101,7 @@ export const Title = styled(NavLink)`
 
   &:hover {
     font-weight: 400;
-    color: #afafa7;
+    color: var(--color-card);
     font-size: 28px;
     cursor: pointer;
   }
@@ -111,18 +111,18 @@ export const Title = styled(NavLink)`
     $active &&
     `
       ${Iconsvg} {
-        background-color: #ffd08a;
+        background-color: var(--color-accent);
         padding: 5px;
-        color: #22211c;
+        color: var(--color-bg-dark);
       }
     `}
 
   @media only screen and (max-width: 768px) {
     padding: 0 15px 10px;
     font-size: 20px !important;
-    color: ${({ $active }) => ($active ? "white" : "#afafa7")} !important;
+    color: ${({ $active }) => ($active ? "var(--color-text-dark-bg)" : "var(--color-card)")} !important;
     border-bottom: ${({ $active }) =>
-      $active ? "4px solid #ffd08a" : "none"};
+      $active ? "4px solid var(--color-accent)" : "none"};
 
     &:hover {
       font-size: 20px !important;
@@ -134,8 +134,8 @@ export const Title = styled(NavLink)`
         ${Iconsvg} {
           background-color: transparent;
           padding: 5px;
-          fill: white;
-          stroke: white;
+          fill: var(--color-text-dark-bg);
+          stroke: var(--color-text-dark-bg);
           width: 25px;
           height: 25px;
         }
@@ -149,7 +149,7 @@ export const MenuAction = styled.button`
   font-weight: 200;
   font-size: 24px;
   line-height: 36px;
-  color: #afafa7;
+  color: var(--color-card);
   align-items: center;
   display: flex;
   padding-bottom: 30px;
@@ -164,19 +164,19 @@ export const MenuAction = styled.button`
 
   &:hover {
     font-weight: 400;
-    color: #afafa7;
+    color: var(--color-card);
     font-size: 28px;
   }
 
   &:hover ${Iconsvg} {
-    background-color: #ffd08a;
+    background-color: var(--color-accent);
     padding: 5px;
-    color: #22211c;
+    color: var(--color-bg-dark);
   }
 
   @media only screen and (max-width: 768px) {
     font-size: 20px !important;
-    color: #afafa7 !important;
+    color: var(--color-card) !important;
     border-bottom: none;
 
     &:hover {
@@ -207,7 +207,7 @@ export const SelectedOrganization = styled.div`
   gap: 6px;
   padding: 10px 14px;
   border: 1px solid rgba(255, 208, 138, 0.45);
-  border-left: 5px solid #ffd08a;
+  border-left: 5px solid var(--color-accent);
   border-radius: 10px;
   background: rgba(255, 208, 138, 0.12);
   box-sizing: border-box;
@@ -220,7 +220,7 @@ export const SelectedOrganization = styled.div`
 `;
 
 export const SelectedOrganizationLabel = styled.span`
-  color: #ffd08a;
+  color: var(--color-accent);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -234,8 +234,8 @@ export const SelectedOrganizationSelect = styled.select`
   padding: 8px 34px 8px 10px;
   border: 1px solid rgba(255, 208, 138, 0.45);
   border-radius: 8px;
-  background-color: #333129;
-  color: #fff;
+  background-color: var(--color-bg-submenu);
+  color: var(--color-text-dark-bg);
   font-size: 16px;
   font-weight: 600;
   line-height: 22px;
@@ -246,13 +246,13 @@ export const SelectedOrganizationSelect = styled.select`
   outline: none;
 
   &:focus {
-    border-color: #ffd08a;
+    border-color: var(--color-accent);
     box-shadow: 0 0 0 3px rgba(255, 208, 138, 0.16);
   }
 
   option {
-    background-color: #333129;
-    color: #fff;
+    background-color: var(--color-bg-submenu);
+    color: var(--color-text-dark-bg);
   }
 `;
 
@@ -268,7 +268,7 @@ export const MobileToggle = styled.button`
     border-radius: 10px;
     background: rgba(255, 208, 138, 0.15);
     border: 1px solid rgba(255, 208, 138, 0.35);
-    color: #ffd08a;
+    color: var(--color-accent);
     cursor: pointer;
     z-index: 30;
     align-items: center;
@@ -283,7 +283,7 @@ export const MobileToggle = styled.button`
 `;
 
 export const Linha = styled.div`
-  background-color: #afafa7;
+  background-color: var(--color-card);
   height: 1px;
   width: 100%;
   margin-bottom: 30px;

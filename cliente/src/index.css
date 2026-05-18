@@ -1,11 +1,17 @@
 :root {
+  --color-accent: #FFD08A;
+  --color-bg-dark: #22211C;
+  --color-bg-submenu: #333129;
+  --color-card: #AFAFA7;
+  --color-text-dark-bg: #CDCCC8;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #22211C;
+  color: var(--color-text-dark-bg);
+  background-color: var(--color-bg-dark);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -34,11 +40,11 @@ h1 {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #22211C;
-    background-color: #ffffff;
+    color: var(--color-text-dark-bg);
+    background-color: var(--color-bg-dark);
   }
   a:hover {
-    color: #747bff;
+    color: var(--color-accent);
   }
  
 }
