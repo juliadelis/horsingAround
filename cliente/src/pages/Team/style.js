@@ -79,7 +79,7 @@ export const LogoutButton = styled.button`
 export const Title = styled.h1`
   margin: 0;
   font-size: 2rem;
-  color: #f6e7b0;
+  color: #FFD08A;
 
   @media (max-width: 768px) {
     font-size: 1.5rem;
@@ -88,7 +88,7 @@ export const Title = styled.h1`
 
 export const Subtitle = styled.p`
   margin: 8px 0 0;
-  color: #c8b78a;
+  color: #CDCCC8;
   font-size: 0.95rem;
 `;
 
@@ -97,7 +97,7 @@ export const AddButton = styled.button`
   align-items: center;
   gap: 8px;
   border: none;
-  background: #d19f4f;
+  background: #FFD08A;
   color: #1f1a13;
   padding: 0.85rem 1.25rem;
   border-radius: 8px;
@@ -149,7 +149,7 @@ export const Table = styled.table`
 export const Th = styled.th`
   text-align: left;
   padding: 18px 14px;
-  color: #d4c292;
+  color: #FFD08A;
   font-weight: 600;
   font-size: 0.95rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);

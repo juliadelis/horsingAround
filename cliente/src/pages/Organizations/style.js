@@ -75,56 +75,55 @@ export const Botao = styled.button`
      box-shadow: 8px 13px 42.8px #ffd08a40;
     }
 
-    
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      box-shadow: none;
+    }
 
 `;
 
 export const Form = styled.form`
-  
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: flex-end;
+  margin-bottom: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f7f1dc;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+
+  &::placeholder {
+    color: rgba(247, 241, 220, 0.55);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #d19f4f;
+    box-shadow: 0 0 0 3px rgba(209, 159, 79, 0.15);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+`;
+
+export const FormActions = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  font-size: 18px;
-
-  input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    background-color: #ffffff;
-    color: #333;
-
-    &::placeholder {
-      color: #999;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: #ffd08a;
-      box-shadow: 0 0 5px rgba(255, 208, 138, 0.3);
-    }
-  }
-
-  button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: #ffd08a;
-    color: #22211c;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #ffb84d;
-    }
-
-    &:active {
-      background-color: #ff9f00;
-    }
-  }
+  align-items: start;
+  justify-content: flex-start;
 `;
 
 
@@ -159,4 +158,68 @@ export const Spinner = styled.div`
   border-top-color: #ffd08a;
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
+`;
+
+export const dialogStyles = `
+  .p-dialog {
+    background: rgba(38, 34, 26, 0.95) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .p-dialog .p-dialog-header {
+    background: rgba(38, 34, 26, 0.95) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #f6e7b0 !important;
+    padding: 24px !important;
+  }
+
+  .p-dialog .p-dialog-title {
+    color: #f6e7b0 !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+  }
+
+  .p-dialog .p-dialog-content {
+    background: rgba(38, 34, 26, 0.95) !important;
+    color: #f7f1dc !important;
+    padding: 24px !important;
+  }
+
+  .p-dialog .p-dialog-footer {
+    background: rgba(38, 34, 26, 0.95) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 16px 24px !important;
+  }
+
+  .p-dialog .p-dialog-header-close {
+    color: #f7f1dc !important;
+  }
+
+  .p-dialog .p-dialog-header-close:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  @media (max-width: 768px) {
+    .p-dialog {
+      width: 90vw !important;
+      max-width: 90vw !important;
+    }
+
+    .p-dialog .p-dialog-header {
+      padding: 16px !important;
+    }
+
+    .p-dialog .p-dialog-title {
+      font-size: 1.1rem !important;
+    }
+
+    .p-dialog .p-dialog-content {
+      padding: 16px !important;
+    }
+
+    .p-dialog .p-dialog-footer {
+      padding: 12px 16px !important;
+    }
+  }
 `;

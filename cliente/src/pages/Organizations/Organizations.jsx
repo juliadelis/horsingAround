@@ -2,7 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 import { organizationService } from "../../services/organizationService";
-import { Container, Title, IconOrg, Card, Botao, Form, Header, Organizacao, LoadingState, Spinner } from "./style.js";
+import {
+  Container,
+  Title,
+  IconOrg,
+  Card,
+  Botao,
+  Form,
+  Organizacao,
+  LoadingState,
+  Spinner,
+  dialogStyles,
+  Input,
+  FormActions,
+} from "./style.js";
 import { TbHorseshoe } from "react-icons/tb";
 import { FiPlus } from "react-icons/fi";
 
@@ -11,6 +24,7 @@ const Organizations = () => {
   const [organizations, setOrganizations] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -31,18 +45,33 @@ const Organizations = () => {
     loadOrganizations();
   }, []);
 
+  useEffect(() => {
+    const styleElement = document.createElement("style");
+    styleElement.textContent = dialogStyles;
+    document.head.appendChild(styleElement);
+
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await organizationService.create(form);
+    try {
+      setSubmitting(true);
+      await organizationService.create(form);
 
-    setForm({
-      name: "",
-      slug: "",
-    });
+      setForm({
+        name: "",
+        slug: "",
+      });
 
-    setShowDialog(false);
-    loadOrganizations();
+      setShowDialog(false);
+      loadOrganizations();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const selectOrganization = (organization) => {
@@ -56,13 +85,6 @@ const Organizations = () => {
   const getHorsesCount = (organization) => {
     return organization.horse_count || 0;
   };
-
-  const headerElement = (
-        <Header>
-           
-           Criar organização
-        </Header>
-    );
 
   return (
     <Container>
@@ -107,14 +129,17 @@ const Organizations = () => {
       </div>
 
       <Dialog
-        header={headerElement}
+        header="Criar organização"
         visible={showDialog}
         onHide={() => setShowDialog(false)}
-        style={{ width: '50vw', backgroundColor: 'white', padding: '20px', }}
-        modal>
+        style={{ width: "520px" }}
+        modal
+        className="p-fluid">
         <Form onSubmit={handleSubmit}>
-          <input
+          <Input
             placeholder="Nome da organização"
+            required
+            disabled={submitting}
             value={form.name}
             onChange={(e) =>
               setForm({
@@ -124,8 +149,10 @@ const Organizations = () => {
             }
           />
 
-          <input
+          <Input
             placeholder="Slug"
+            required
+            disabled={submitting}
             value={form.slug}
             onChange={(e) =>
               setForm({
@@ -135,7 +162,11 @@ const Organizations = () => {
             }
           />
 
-          <button type="submit">Criar organização</button>
+          <FormActions>
+            <Botao type="submit" disabled={submitting}>
+              {submitting ? "Criando..." : "Criar organização"}
+            </Botao>
+          </FormActions>
         </Form>
       </Dialog>
     </Container>
