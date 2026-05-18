@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { organizationService } from "../services/organizationService";
 
-const getOrganizationId = async () => {
+const getOrganizationId = async (routeSlug) => {
   const storedId = localStorage.getItem("organizationId");
-  if (storedId) return storedId;
+  const storedSlug = localStorage.getItem("organizationSlug");
+  if (storedId && (!routeSlug || routeSlug === storedSlug)) return storedId;
 
-  const slug = localStorage.getItem("organizationSlug");
+  const slug = routeSlug || storedSlug;
   if (!slug) return null;
 
   const organizations = await organizationService.getAll();
@@ -23,12 +25,13 @@ const getOrganizationId = async () => {
 export const useOrganizationRole = () => {
   const [role, setRole] = useState(null);
   const [roleLoading, setRoleLoading] = useState(true);
+  const { slug } = useParams();
 
   useEffect(() => {
     const loadRole = async () => {
       try {
         setRoleLoading(true);
-        const organizationId = await getOrganizationId();
+        const organizationId = await getOrganizationId(slug);
 
         if (!organizationId) {
           setRole(null);
@@ -46,7 +49,7 @@ export const useOrganizationRole = () => {
     };
 
     loadRole();
-  }, []);
+  }, [slug]);
 
   return {
     role,

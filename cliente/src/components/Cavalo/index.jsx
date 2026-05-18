@@ -159,7 +159,14 @@ const VerCavalo = () => {
       </Container>
     );
   }
-  return <h2>Carregando</h2>;
+  return (
+    <Container>
+      <LoadingState>
+        <Spinner />
+        Carregando...
+      </LoadingState>
+    </Container>
+  );
 };
 
 export default VerCavalo;

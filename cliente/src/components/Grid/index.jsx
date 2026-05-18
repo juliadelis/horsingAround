@@ -4,8 +4,6 @@ import {
   Card,
   Container,
   EmptyState,
-  LoadingState,
-  Spinner,
   Item,
   ItemNome,
   ItemBanco,
@@ -14,6 +12,10 @@ import {
   ItemCorrespondente,
   ItemMedicacao,
   Botao,
+  SkeletonButton,
+  SkeletonCard,
+  SkeletonImage,
+  SkeletonLine,
 } from "./style.js";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -43,10 +45,34 @@ const Grid = () => {
   return (
     <Container>
       {loading ? (
-        <LoadingState>
-          <Spinner />
-          Carregando cavalos...
-        </LoadingState>
+        Array.from({ length: 2 }).map((_, index) => (
+          <SkeletonCard
+            aria-busy="true"
+            aria-label="Carregando cavalos"
+            key={index}
+          >
+            <SkeletonImage />
+            <CardText>
+              <SkeletonLine $width="58%" $height="28px" />
+              <ItemCorrespondente>
+                <SkeletonLine />
+              </ItemCorrespondente>
+              <ItemCorrespondente>
+                <SkeletonLine />
+              </ItemCorrespondente>
+              <ItemCorrespondente>
+                <SkeletonLine />
+              </ItemCorrespondente>
+              <ItemCorrespondente>
+                <SkeletonLine />
+              </ItemCorrespondente>
+              <ItemMedicacao>
+                <SkeletonLine $width="70%" />
+              </ItemMedicacao>
+            </CardText>
+            <SkeletonButton />
+          </SkeletonCard>
+        ))
       ) : cavalos.length === 0 ? (
         <EmptyState>
           <h2>Não há cavalos cadastrados nesta organização.</h2>

@@ -12,6 +12,9 @@ import {
   Logo,
   LogoContainer,
   MenuAction,
+  SelectedOrganization,
+  SelectedOrganizationLabel,
+  SelectedOrganizationSelect,
 } from "./style";
 import { IoAddCircleOutline, IoMenu, IoClose, IoLogOutOutline } from "react-icons/io5";
 import { LiaHorseSolid } from "react-icons/lia";
@@ -26,6 +29,7 @@ import { useOrganizationRole } from "../../hooks/useOrganizationRole";
 function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasAnyOrganization, setHasAnyOrganization] = useState(false);
+  const [organizations, setOrganizations] = useState([]);
   const params = useParams();
   const selectedSlug = params.slug || localStorage.getItem("organizationSlug");
   const hasOrganization = Boolean(selectedSlug);
@@ -39,8 +43,19 @@ function Layout() {
   useEffect(() => {
     const loadOrganizations = async () => {
       try {
-        const organizations = await organizationService.getAll();
-        setHasAnyOrganization(organizations.length > 0);
+        const organizationsData = await organizationService.getAll();
+        setOrganizations(organizationsData);
+        setHasAnyOrganization(organizationsData.length > 0);
+
+        const currentOrganization = organizationsData.find(
+          (organization) => organization.slug === selectedSlug
+        );
+
+        if (currentOrganization) {
+          localStorage.setItem("organizationId", currentOrganization.id);
+          localStorage.setItem("organizationName", currentOrganization.name);
+          localStorage.setItem("organizationSlug", currentOrganization.slug);
+        }
       } catch (error) {
         console.error("Erro ao carregar organizações:", error);
         setHasAnyOrganization(false);
@@ -48,7 +63,7 @@ function Layout() {
     };
 
     loadOrganizations();
-  }, []);
+  }, [selectedSlug]);
 
 const isActive = (path, exact = false) => {
   if (exact) {
@@ -56,6 +71,21 @@ const isActive = (path, exact = false) => {
   }
 
   return location.pathname.startsWith(path);
+};
+
+const handleOrganizationChange = (event) => {
+  const newSlug = event.target.value;
+  const organization = organizations.find((item) => item.slug === newSlug);
+
+  if (!organization) {
+    return;
+  }
+
+  localStorage.setItem("organizationId", organization.id);
+  localStorage.setItem("organizationName", organization.name);
+  localStorage.setItem("organizationSlug", organization.slug);
+  setMenuOpen(false);
+  navigate(`/${organization.slug}`);
 };
 
   return (
@@ -72,6 +102,21 @@ const isActive = (path, exact = false) => {
           <MenuItems open={menuOpen}>
             {hasOrganization && hasAnyOrganization ? (
               <>
+                <SelectedOrganization>
+                  <SelectedOrganizationLabel>Organização atual</SelectedOrganizationLabel>
+                  <SelectedOrganizationSelect
+                    aria-label="Selecionar organizaÃ§Ã£o"
+                    onChange={handleOrganizationChange}
+                    value={selectedSlug || ""}
+                  >
+                    {organizations.map((organization) => (
+                      <option key={organization.id} value={organization.slug}>
+                        {organization.name}
+                      </option>
+                    ))}
+                  </SelectedOrganizationSelect>
+                </SelectedOrganization>
+                <Linha />
                 <Title   to={basePath}  $active={isActive(basePath, true)} onClick={() => setMenuOpen(false)}>
                   <Iconsvg>
                     <HiOutlineHome size={38} />

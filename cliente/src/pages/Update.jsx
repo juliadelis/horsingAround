@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Form from "../components/Form";
+import { LoadingState, Spinner } from "../components/Form/style";
 import { horseService } from "../services/horseService";
 
 const Update = () => {
@@ -25,7 +26,12 @@ const Update = () => {
   }, [id]);
 
   if (!cavalo) {
-    return <h2>Carregando...</h2>;
+    return (
+      <LoadingState>
+        <Spinner />
+        Carregando...
+      </LoadingState>
+    );
   }
 
   return <Form initialData={cavalo} />;

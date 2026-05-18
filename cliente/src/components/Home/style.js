@@ -1,9 +1,30 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 const spin = keyframes`
   to {
     transform: rotate(360deg);
   }
+`;
+
+const shimmer = keyframes`
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+`;
+
+const skeletonBackground = css`
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0.16) 37%,
+    rgba(255, 255, 255, 0.08) 63%
+  );
+  background-size: 400% 100%;
+  animation: ${shimmer} 1.4s ease infinite;
 `;
 
 export const Container = styled.div`
@@ -13,6 +34,7 @@ export const Container = styled.div`
   background-color: #333129;
   border-radius: 25px;
   width: 100%;
+  height: 100%;
   margin: 30px;
   justify-content: space-between;
   @media only screen and (max-width: 768px) {
@@ -58,7 +80,7 @@ export const CardImg = styled.div`
 `;
 
 export const CardText = styled.div`
-  padding: 30px;
+  padding: 20px;
   display: flex;
   flex-wrap: wrap;
 `;
@@ -104,7 +126,6 @@ export const ItemId = styled.div``;
 export const Img = styled.img`
   width: 100%;
   border-radius: 25px 25px 0px 0px;
-  margin-bottom: 20px;
   height: 220px;
 
   object-fit: cover;
@@ -157,6 +178,52 @@ export const Hipica = styled.h2`
   line-height: 36px;
   color: #ffd08a;
   margin-top: 20px;
+`;
+
+export const SkeletonTitle = styled.div`
+  width: min(360px, 80%);
+  height: 36px;
+  border-radius: 8px;
+  margin-top: 20px;
+  ${skeletonBackground}
+`;
+
+export const SkeletonCard = styled(Card)`
+  min-height: 132px;
+  flex-direction: column;
+  gap: 18px;
+`;
+
+export const SkeletonImageCard = styled(CardImg)`
+  min-height: 380px;
+  flex-direction: column;
+`;
+
+export const SkeletonImage = styled.div`
+  width: 100%;
+  height: 220px;
+  border-radius: 25px 25px 0px 0px;
+  ${skeletonBackground}
+`;
+
+export const SkeletonLine = styled.div`
+  width: ${({ $width }) => $width || "100%"};
+  height: ${({ $height }) => $height || "20px"};
+  border-radius: 999px;
+  ${skeletonBackground}
+`;
+
+export const SkeletonSideImage = styled.div`
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+  border-radius: 25px 0px 0px 25px;
+  ${skeletonBackground}
+
+  @media only screen and (max-width: 768px) {
+    height: 300px;
+    border-radius: 25px 25px 0px 0px;
+  }
 `;
 
 export const LoadingState = styled.div`

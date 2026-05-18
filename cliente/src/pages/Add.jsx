@@ -1,11 +1,17 @@
 import Form from '../components/Form';
+import { LoadingState, Spinner } from "../components/Form/style";
 import { useOrganizationRole } from "../hooks/useOrganizationRole.jsx";
 
 const Add = () => {
   const { canAddHorse, roleLoading } = useOrganizationRole();
 
   if (roleLoading) {
-    return <h2>Carregando...</h2>;
+    return (
+      <LoadingState>
+        <Spinner />
+        Carregando...
+      </LoadingState>
+    );
   }
 
   if (!canAddHorse) {

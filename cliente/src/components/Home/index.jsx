@@ -14,8 +14,12 @@ import {
   Hipica,
   CardImg,
   DivImg,
-  LoadingState,
-  Spinner,
+  SkeletonCard,
+  SkeletonImage,
+  SkeletonImageCard,
+  SkeletonLine,
+  SkeletonSideImage,
+  SkeletonTitle,
 } from "./style.js";
 import { useHorseData } from "../../hooks/useHorseData";
 import { organizationService } from "../../services/organizationService";
@@ -72,10 +76,27 @@ function Home() {
   if (loading || !organization) {
     return (
       <Container>
-        <LoadingState>
-          <Spinner />
-          Carregando organização...
-        </LoadingState>
+        <Container_E aria-busy="true" aria-label="Carregando organização">
+          <SkeletonTitle />
+          <SkeletonCard>
+            <SkeletonLine $width="70%" $height="28px" />
+            <SkeletonLine $width="85%" />
+          </SkeletonCard>
+          <SkeletonCard>
+            <SkeletonLine $width="58%" $height="28px" />
+            <SkeletonLine $width="100%" />
+          </SkeletonCard>
+          <SkeletonImageCard>
+            <SkeletonImage />
+            <CardText>
+              <SkeletonLine $width="80%" $height="28px" />
+              <SkeletonLine $width="35%" />
+            </CardText>
+          </SkeletonImageCard>
+        </Container_E>
+        <DivImg>
+          <SkeletonSideImage />
+        </DivImg>
       </Container>
     );
   }

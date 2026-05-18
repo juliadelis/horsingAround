@@ -94,7 +94,7 @@ export const Title = styled(NavLink)`
   color: #afafa7;
   align-items: center;
   display: flex;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
   text-decoration: none;
   transition: 0.3s;
   gap: 15px;
@@ -175,7 +175,6 @@ export const MenuAction = styled.button`
   }
 
   @media only screen and (max-width: 768px) {
-    padding: 0 15px 10px;
     font-size: 20px !important;
     color: #afafa7 !important;
     border-bottom: none;
@@ -198,6 +197,62 @@ export const MenuItems = styled.div`
     padding: 70px 20px 20px;
     display: ${({ open }) => (open ? "flex" : "none")};
     gap: 15px;
+  }
+`;
+
+export const SelectedOrganization = styled.div`
+  width: calc(100% - 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 208, 138, 0.45);
+  border-left: 5px solid #ffd08a;
+  border-radius: 10px;
+  background: rgba(255, 208, 138, 0.12);
+  box-sizing: border-box;
+  margin-bottom: 20px;
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+    padding: 12px 15px;
+  }
+`;
+
+export const SelectedOrganizationLabel = styled.span`
+  color: #ffd08a;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 16px;
+  text-transform: uppercase;
+`;
+
+export const SelectedOrganizationSelect = styled.select`
+  width: 100%;
+  min-width: 0;
+  padding: 8px 34px 8px 10px;
+  border: 1px solid rgba(255, 208, 138, 0.45);
+  border-radius: 8px;
+  background-color: #333129;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: #ffd08a;
+    box-shadow: 0 0 0 3px rgba(255, 208, 138, 0.16);
+  }
+
+  option {
+    background-color: #333129;
+    color: #fff;
   }
 `;
 
@@ -231,7 +286,7 @@ export const Linha = styled.div`
   background-color: #afafa7;
   height: 1px;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   margin-top: 10px;
   @media only screen and (max-width: 768px) {
     display: none;

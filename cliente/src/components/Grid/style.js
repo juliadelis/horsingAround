@@ -1,10 +1,31 @@
 import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 const spin = keyframes`
   to {
     transform: rotate(360deg);
   }
+`;
+
+const shimmer = keyframes`
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+`;
+
+const skeletonBackground = css`
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0.16) 37%,
+    rgba(255, 255, 255, 0.08) 63%
+  );
+  background-size: 400% 100%;
+  animation: ${shimmer} 1.4s ease infinite;
 `;
 
 export const Container = styled.div`
@@ -149,6 +170,33 @@ export const EmptyState = styled.div`
     color: white;
     margin: 0;
   }
+`;
+
+export const SkeletonCard = styled(Card)`
+  min-height: 510px;
+`;
+
+export const SkeletonImage = styled.div`
+  width: 100%;
+  height: 260px;
+  border-radius: 25px 25px 0px 0px;
+  ${skeletonBackground}
+`;
+
+export const SkeletonLine = styled.div`
+  width: ${({ $width }) => $width || "100%"};
+  height: ${({ $height }) => $height || "20px"};
+  border-radius: 999px;
+  margin-bottom: 16px;
+  ${skeletonBackground}
+`;
+
+export const SkeletonButton = styled.div`
+  width: 140px;
+  height: 42px;
+  border-radius: 8px;
+  margin-left: 20px;
+  ${skeletonBackground}
 `;
 
 export const LoadingState = styled.div`
