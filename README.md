@@ -48,11 +48,11 @@ The current product supports multi-organization access, authenticated private ro
 
 - Authentication with Supabase email and password accounts.
 - Private application routes protected by the current Supabase session.
-- Organization creation and organization switching.
+- Organization creation and organization switching through both the organization page and the sidebar selector.
 - Horse registration with name, owner, age, breed, gender, weight, food amount, hay usage, lessons, parent names, medication status, treatment details, and photo upload.
-- Horse listing with loading states and empty states.
+- Horse listing with skeleton loading states and empty states.
 - Horse detail view with edit and delete actions.
-- Dashboard with organization context, male and female counts, medicated horses, and most-used riding school horse.
+- Dashboard with organization context, male and female counts, medicated horses, most-used riding school horse, and skeleton loading states that preserve the final layout size.
 - Team management by authorized email, without manually creating passwords for members.
 - Role-based permissions per organization for admins, caretakers, trainers, and veterinarians.
 - Email invitation flow for members:
@@ -61,7 +61,9 @@ The current product supports multi-organization access, authenticated private ro
   - Pending authorized emails are linked to the user account after login or registration.
 - Duplicate member protection by email per organization.
 - Toast feedback for success and error states.
-- Submit and delete loading states for horse and team workflows.
+- Consistent loading, submit, and delete states for horse, organization, and team workflows.
+- Standardized PrimeReact dialogs for organization creation and team member management.
+- Shared visual language for highlight color, dark backgrounds, submenu surfaces, cards, text on dark backgrounds, and action buttons.
 - SPA fallback configuration for direct route access on Vercel.
 
 ## Role-Based Permissions
@@ -120,6 +122,22 @@ This prevents sensitive organization and team operations from being available to
 - Vercel for frontend deployment
 - Supabase for authentication and database
 - Cloudinary for horse photo storage
+
+## UI Standards
+
+The frontend uses a small set of shared CSS variables to keep the application visually consistent:
+
+```css
+--color-accent: #FFD08A;
+--color-bg-dark: #22211C;
+--color-bg-submenu: #333129;
+--color-card: #AFAFA7;
+--color-text-dark-bg: #CDCCC8;
+```
+
+Action buttons follow a shared pattern across forms, dialogs, and cards: 44px minimum height, 12px by 18px padding, 16px font size, 700 font weight, pointer cursor, centered inline-flex layout, and the accent color as the main background.
+
+The main menu includes an organization dropdown so users can switch workspaces without returning to the organization list. Loading states use reusable `LoadingState` and `Spinner` components or skeleton screens where preserving layout size improves the experience.
 
 ## Architecture
 
@@ -243,6 +261,8 @@ If the frontend environment file is used in your deployment, keep only public cl
 - API access is centralized through service modules on the frontend.
 - Auth state is provided by a React context.
 - Private routes wait for Supabase session resolution before redirecting.
+- Organization role state refreshes when the active organization changes.
 - Backend modules are organized by domain.
 - Member invitations are idempotent by organization email.
-- Loading and toast states are implemented across critical save and delete flows.
+- Loading, skeleton, and toast states are implemented across critical list, save, and delete flows.
+- Dialogs and action buttons follow shared styling conventions to reduce UI drift.
