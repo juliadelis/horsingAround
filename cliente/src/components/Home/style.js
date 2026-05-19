@@ -158,8 +158,10 @@ export const DivImg = styled.div`
 
 export const Container_D = styled.img`
   width: 100%;
-  height: auto;
+object-fit: cover;
+object-position: right;
   float: right;
+  height: 100%;
   transform: scaleX(-1);
   border-radius: 25px 0px 0px 25px;
   @media only screen and (max-width: 768px) {
