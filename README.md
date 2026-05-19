@@ -238,8 +238,6 @@ SUPABASE_SERVICE_ROLE_KEY=
 FRONTEND_URL=http://localhost:5173
 ```
 
-Important: `SUPABASE_SERVICE_ROLE_KEY` must only exist on the backend. Never expose it in the frontend.
-
 ### Frontend Setup
 
 ```bash
