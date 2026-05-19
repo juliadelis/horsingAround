@@ -14,8 +14,7 @@ export const Container = styled.div`
   background-color: var(--color-bg-submenu);
   border-radius: 28px;
   width: 100%;
-  height: 80vh;
-  margin: 30px;
+  height: 100%;
   justify-content: space-between;
   @media only screen and (max-width: 768px) {
     height: calc(100vh - 60px);
